@@ -1,9 +1,13 @@
-import { AppBar, Toolbar, IconButton, Typography, Button } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Typography, Button, Switch } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 
-export default function Header(){
+interface Props{
+  darkMode : boolean;
+  handleThemeChange: () => void;
+}
+export default function Header({darkMode, handleThemeChange}:Props){
     return (
-        <AppBar position="static">
+        <AppBar position="static" sx = {{mb:4}}>
         <Toolbar>
           <IconButton
             size="large"
@@ -17,6 +21,7 @@ export default function Header(){
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             VendorDeck
           </Typography>
+          <Switch onChange={handleThemeChange}></Switch>
           <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
