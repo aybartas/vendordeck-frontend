@@ -8,7 +8,8 @@ import {
   ListItem,
   Badge,
 } from "@mui/material";
-import { NavLink } from "react-router-dom";
+
+import { Link, NavLink } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 interface Props {
@@ -54,7 +55,7 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
           {midLinks.map(({ title, path }) => (
             <ListItem
               component={NavLink}
-              to={path}
+              to={path} 
               key={path}
               sx={navStyles}
             >

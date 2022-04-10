@@ -8,6 +8,7 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import { Product } from "../../app/models/product";
 interface Props {
   product: Product;
@@ -22,7 +23,6 @@ export default function ProductCard({ product }: Props) {
         avatar={<Avatar>{product.name.charAt(0).toUpperCase()}</Avatar>}
         title={product.name}
       />
-
       <CardMedia
        component="img" 
        height="140"
@@ -38,7 +38,7 @@ export default function ProductCard({ product }: Props) {
       </CardContent>
       <CardActions>
         <Button size="small">Add To Cart</Button>
-        <Button size="small">View</Button>
+        <Button component = {Link} to = {`/catalog/${product.id}`}  size="small">View</Button>
       </CardActions>
     </Card>
   );
