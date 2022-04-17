@@ -1,7 +1,7 @@
 import { Divider, Grid, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { apiAgent } from "../../app/api/ApiService";
 import { Product } from '../../app/models/product';
 
 interface ProductDetailUrlParams {
@@ -15,8 +15,8 @@ export default function ProductDetail (){
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        axios.get(`http://localhost:5050/api/Products/${id}`)
-        .then(response => setCurrentProduct(response.data))
+        apiAgent.Catalog.productDetails(parseInt(id))
+        .then(response => setCurrentProduct(response))
         .catch(error => console.log(error))
         .finally(() => setIsLoading(false))
       },[id]);

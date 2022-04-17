@@ -1,4 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
+import { apiAgent } from "../../app/api/ApiService";
+
 import { Product } from "../../app/models/product";
 import ProductList from './ProductList';
 
@@ -8,9 +10,8 @@ export default function Catalog() {
 
   useEffect(() => {
     console.log("render will exec");
-    fetch("http://localhost:5050/api/products")
-      .then((response) => response.json())
-      .then((data) => setProducts(data));
+    apiAgent.Catalog.catalogList()
+    .then(response =>  setProducts(response));
   }, []);
   console.log("catalog will return");
   return (
