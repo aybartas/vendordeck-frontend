@@ -9,7 +9,7 @@ import {
   Badge,
 } from "@mui/material";
 
-import { Link, NavLink } from "react-router-dom";
+import { NavLink, Link } from 'react-router-dom';
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 interface Props {
@@ -50,7 +50,6 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
         </Typography>
         <Switch onChange={handleThemeChange}></Switch>
 
-
         <List sx={{ display: "flex" }}>
           {midLinks.map(({ title, path }) => (
             <ListItem
@@ -74,9 +73,8 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
             >
               {title.toUpperCase()}
             </ListItem>
-            
           ))}
-           <IconButton size="large" sx={{ color: "inherit" }}>
+          <IconButton component={Link} to="/basket" size="large" sx={{ color: "inherit" }}>          
           <Badge badgeContent={3} color="secondary">
             <ShoppingCartIcon />
           </Badge>

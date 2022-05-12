@@ -1,21 +1,26 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { toast } from "react-toastify";
+import { request } from "http";
 
 axios.defaults.baseURL = "http://localhost:5050/api/";
+axios.defaults.withCredentials = true;
+
 
 axios.interceptors.response.use(
-  (response) => response,
+  response => { return response},
   (error: AxiosError) => {
     const { data, status } = error.response!;
     switch (status) {
       case 400:
-        toast.error(data.title);
+        console.log(data.title);
+        // toast.error(data.title);
         break;
       case 401:
-        toast.error(data.title);
+        console.log(data.title)
+        // toast.error(data.title);
         break;
       case 500:
-        toast.error(data.title);
+        console.log(data.title)
+        // toast.error(data.title);
         break;
       default:
         break;
@@ -37,6 +42,16 @@ const Catalog = {
   catalogList: () => requests.get("products"),
   productDetails: (id: number) => requests.get(`products/${id}`),
 };
+
+const Basket = {
+  get : () => requests.get("basket"),
+  addItem : (produtId : number, quantity = 1) => requests.post("basket",
+  {
+    ProductId: produtId,
+    Quantity: quantity
+  }),
+  removeItem : (productId : number, quantity = 1) => requests.delete(`basket?productId=${productId}&quantity=${quantity}`) 
+}
 const TestErrors = {
   getServerError: () => requests.get("errorTest/server-error"),
   getValidationError: () => requests.get("errorTest/validation-error"),
@@ -48,4 +63,5 @@ const TestErrors = {
 export const apiAgent = {
   Catalog,
   TestErrors,
+  Basket
 };

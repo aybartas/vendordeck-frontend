@@ -8,8 +8,8 @@ import AboutPage from "./../../features/about/AboutPage";
 import ProductDetail from "../../features/catalog/ProductDetail";
 import ContactPage from "../../features/contact/ContactPage";
 import { Route, Switch } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import BasketPage from '../../features/basket/BasketPage';
 
 
 function App() {
@@ -27,10 +27,9 @@ function App() {
   function handleThemeChange() {
     setDarkMode(!darkMode);
   }
-
+  console.log("app will render");
   return (
     <ThemeProvider theme={theme}>
-      <ToastContainer position="bottom-right">
         <CssBaseline />
         <Header darkMode={darkMode} handleThemeChange={handleThemeChange} />
         <Container>
@@ -40,9 +39,10 @@ function App() {
             <Route path="/catalog/:id" component={ProductDetail} />
             <Route path="/about" component={AboutPage} />
             <Route path="/contact" component={ContactPage} />
+            <Route path="/basket" component={BasketPage} />
+
           </Switch>
         </Container>
-      </ToastContainer>
     </ThemeProvider>
   );
 }
