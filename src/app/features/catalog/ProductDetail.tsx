@@ -1,8 +1,8 @@
 import { Divider, Grid, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { apiAgent } from "../../app/api/ApiService";
-import { Product } from '../../app/models/product';
+import { Product } from "../../models/product";
+import { apiAgent } from '../../api/ApiService';
 
 interface ProductDetailUrlParams {
     id : string

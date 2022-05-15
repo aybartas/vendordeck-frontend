@@ -1,16 +1,15 @@
 import { Container, CssBaseline } from "@mui/material";
-import Catalog from "../../features/catalog/Catalog";
 import Header from "./Header";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
-import HomePage from "../../features/home/HomePage";
-import AboutPage from "./../../features/about/AboutPage";
-import ProductDetail from "../../features/catalog/ProductDetail";
-import ContactPage from "../../features/contact/ContactPage";
 import { Route, Switch } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
-import BasketPage from '../../features/basket/BasketPage';
-
+import { ContactPage } from "@mui/icons-material";
+import AboutPage from "../features/about/AboutPage";
+import BasketPage from "../features/basket/BasketPage";
+import Catalog from "../features/catalog/Catalog";
+import ProductDetail from "../features/catalog/ProductDetail";
+import HomePage from "../features/home/HomePage";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);

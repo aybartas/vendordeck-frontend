@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
-import { apiAgent } from "../../app/api/ApiService";
+import { apiAgent } from "../../api/ApiService";
+import { Product } from "../../models/product";
 
-import { Product } from "../../app/models/product";
 import ProductList from './ProductList';
 
 export default function Catalog() {

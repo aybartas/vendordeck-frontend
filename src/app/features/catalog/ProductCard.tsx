@@ -11,8 +11,10 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { apiAgent } from "../../app/api/ApiService";
-import { Product } from "../../app/models/product";
+import { Product } from "../../models/product";
+import { apiAgent } from '../../api/ApiService';
+
+
 interface Props {
   product: Product;
 }

@@ -1,6 +1,5 @@
 import { Button, ButtonGroup, Container, Typography } from "@mui/material";
-import { apiAgent } from "../../app/api/ApiService";
-
+import { apiAgent } from "../../api/ApiService";
 export default function AboutPage (){
     console.log("about");
 
