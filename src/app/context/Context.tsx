@@ -17,7 +17,7 @@ export function useStoreContext(){
     return context;
 }
 
-export function StoreProvider({children}: PropsWithChildren<any>){
+export function ContextProvider({children}: PropsWithChildren<any>){
 
     const [basket,setBasket] = useState<Basket | null>(null);
 
