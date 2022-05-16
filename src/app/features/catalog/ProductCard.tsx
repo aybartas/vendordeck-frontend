@@ -13,12 +13,15 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Product } from "../../models/product";
 import { apiAgent } from '../../api/ApiService';
+import { useStoreContext } from "../../context/Context";
 
 
 interface Props {
   product: Product;
 }
 export default function ProductCard({ product }: Props) {
+  const {setBasket} = useStoreContext();
+
   const [loading, setLoading] = useState(false);
 
   function handleAddItem(productId: number) {
@@ -26,8 +29,9 @@ export default function ProductCard({ product }: Props) {
     setLoading(true);
     console.log(" after setLoading: true");
     apiAgent.Basket.addItem(productId)
-      .catch((error) => console.log(error))
-      .finally(() => {
+    .then(basket => setBasket(basket))
+    .catch((error) => console.log(error))
+    .finally(() => {
         console.log(" before setloading false");
         setLoading(false);
         console.log("after setLoadingFalse");

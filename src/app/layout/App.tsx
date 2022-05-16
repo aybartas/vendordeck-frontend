@@ -1,7 +1,7 @@
-import { Container, CssBaseline } from "@mui/material";
+import { Container, CssBaseline, CircularProgress } from '@mui/material';
 import Header from "./Header";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Route, Switch } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import { ContactPage } from "@mui/icons-material";
@@ -10,9 +10,15 @@ import BasketPage from "../features/basket/BasketPage";
 import Catalog from "../features/catalog/Catalog";
 import ProductDetail from "../features/catalog/ProductDetail";
 import HomePage from "../features/home/HomePage";
+import { useStoreContext } from '../context/Context';
+import { getCookie } from "../utils/cookiesUtils";
+import { apiAgent } from '../api/ApiService';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
+  const [loading,setLoading] = useState(false);
+  const {setBasket} = useStoreContext();
+
   const paletteSelection = darkMode ? "dark" : "light";
   const theme = createTheme({
     palette: {
@@ -22,6 +28,23 @@ function App() {
       },
     },
   });
+  
+  // use setBasket as dependency so the useEffect hook will be triggered only after setting basket
+  useEffect(() => {
+    const buyerId = getCookie('buyerId');
+    if(buyerId){
+      apiAgent.Basket.get()
+      .then(basket => setBasket(basket))
+      .catch(error => console.log(error))
+      .finally(() => setLoading(false));
+    }
+    else{
+      setLoading(false);
+    }
+
+  },[setBasket]);
+
+  if(loading) return (<CircularProgress />);
 
   function handleThemeChange() {
     setDarkMode(!darkMode);

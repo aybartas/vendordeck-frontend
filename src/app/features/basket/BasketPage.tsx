@@ -1,21 +1,10 @@
-import { useEffect, useState } from "react";
-import { apiAgent } from "../../api/ApiService";
-import { CircularProgress, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Delete } from "@mui/icons-material";
-import { Basket } from "../../models/basket";
+import { useStoreContext } from '../../context/Context';
 
 export default function BasketPage() {
-  const [loading, setLoading] = useState(true);
-  const [basket, setBasket] = useState<Basket | null>(null);
 
-  useEffect(() => {
-    apiAgent.Basket.get()
-      .then((basket) => setBasket(basket))
-      .catch((error) => console.log(error))
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) return <CircularProgress />;
+  const {basket}= useStoreContext();
 
   if (!basket) return <Typography> Basket is empty</Typography>;
 
