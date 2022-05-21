@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Product } from "../../models/product";
 import { apiAgent } from '../../api/ApiService';
+import displayCalculatedCurrency from "../../utils/caculations";
 
 interface ProductDetailUrlParams {
     id : string
@@ -33,7 +34,7 @@ export default function ProductDetail (){
             <Grid item xs = {6}>
                 <Typography variant="h3"> {currentProduct.name}</Typography>
                 <Divider></Divider>
-                <Typography variant="h4"> ${(currentProduct.price/100).toFixed(2)}</Typography>
+                <Typography variant="h4"> ${displayCalculatedCurrency(currentProduct.price)}</Typography>
                 <TableContainer sx = {{mt:'3rem'}}>
                     <TableBody>
                         <TableRow>

@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { Product } from "../../models/product";
 import { apiAgent } from '../../api/ApiService';
 import { useStoreContext } from "../../context/Context";
+import displayCalculatedCurrency from "../../utils/caculations";
 
 
 interface Props {
@@ -61,7 +62,7 @@ export default function ProductCard({ product }: Props) {
       />
       <CardContent>
         <Typography gutterBottom color="secondary" variant="h5">
-          ${(product.price / 100).toFixed(2)}
+          ${displayCalculatedCurrency(product.price)}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {product.brand} / {product.type}

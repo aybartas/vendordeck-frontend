@@ -33,9 +33,8 @@ export function ContextProvider({children}: PropsWithChildren<any>){
             items.splice(itemToRemove,1);
         }
 
-        setBasket(prevState => {
-            return {...prevState!, items}
-        });   
+        basket.basketItems = items;
+        setBasket(basket);   
     }
 
     return (
