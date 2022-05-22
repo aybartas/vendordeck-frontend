@@ -1,4 +1,5 @@
 import {
+  Button,
   Grid,
   Paper,
   Table,
@@ -17,6 +18,7 @@ import { Fragment, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { BasketSummary } from './BasketSummary';
 import displayCalculatedCurrency from "../../utils/caculations";
+import { Link } from "react-router-dom";
 
 
 export default function BasketPage() {
@@ -131,6 +133,9 @@ export default function BasketPage() {
             <Grid item xs = {6} />
             <Grid item xs = {6}>
               <BasketSummary></BasketSummary>
+              <Button component={Link} to="/checkout" variant="contained" color="primary" fullWidth> 
+                  Checkout
+              </Button>
             </Grid>
     </Grid>
     </Fragment>

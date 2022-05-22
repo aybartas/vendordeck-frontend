@@ -13,6 +13,7 @@ import HomePage from "../features/home/HomePage";
 import { useStoreContext } from '../context/Context';
 import { getCookie } from "../utils/cookiesUtils";
 import { apiAgent } from '../api/ApiService';
+import CheckoutPage from '../features/checkout/CheckoutPage';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -62,7 +63,7 @@ function App() {
             <Route path="/about" component={AboutPage} />
             <Route path="/contact" component={ContactPage} />
             <Route path="/basket" component={BasketPage} />
-
+            <Route path="/checkout" component={CheckoutPage} />            
           </Switch>
         </Container>
     </ThemeProvider>
