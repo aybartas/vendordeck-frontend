@@ -1,4 +1,3 @@
-// import { BasketItem } from "./basketItem";
 
 import { BasketItem } from "./basketItem";
 
@@ -7,5 +6,3 @@ export interface Basket {
     buyerId: string;
     basketItems: BasketItem[];
 }
-
-

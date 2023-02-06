@@ -2,11 +2,11 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  Typography,
   Switch,
   List,
   ListItem,
   Badge,
+  Typography,
 } from "@mui/material";
 
 import { NavLink, Link } from 'react-router-dom';
@@ -27,31 +27,30 @@ const rightLinks = [
   { title: "register", path: "/register" },
 ];
 
-const navStyles= { 
-  color: "inherit" , 
-  textDecoration : 'none',
-  typography : 'h6',
-  '&:hover' : {
+const navStyles = {
+  color: "inherit",
+  textDecoration: 'none',
+  typography: 'h6',
+  '&:hover': {
     color: 'grey.500'
   },
   '&.active': {
-    color:'text.secondary'
+    color: 'text.secondary'
   }
 };
 
 export default function Header({ darkMode, handleThemeChange }: Props) {
 
-  const {basket} = useStoreContext();
+  const { basket } = useStoreContext();
 
   const itemCount = basket?.basketItems.length;
 
   return (
-    <AppBar position="static" sx={{ mb: 4 }}>
-      <Toolbar sx={{display: 'flex', justifyContent : 'space-between'}}>
+    <AppBar position="sticky" sx={{ mb: 4 }}>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant="h6" component={NavLink}
-         exact 
-         to="/" 
-         sx={navStyles}>
+          to="/"
+          sx={navStyles}>
           VendorDeck
         </Typography>
         <Switch onChange={handleThemeChange}></Switch>
@@ -60,7 +59,7 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
           {midLinks.map(({ title, path }) => (
             <ListItem
               component={NavLink}
-              to={path} 
+              to={path}
               key={path}
               sx={navStyles}
             >
@@ -80,14 +79,14 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
               {title.toUpperCase()}
             </ListItem>
           ))}
-          <IconButton component={Link} to="/basket" size="large" sx={{ color: "inherit" }}>          
-          <Badge badgeContent={itemCount} color="secondary">
-            <ShoppingCartIcon />
-          </Badge>
-          <IconButton aria-label="cart"></IconButton>
-        </IconButton>
+          <IconButton component={Link} to="/basket" size="large" sx={{ color: "inherit" }}>
+            <Badge badgeContent={itemCount} color="secondary">
+              <ShoppingCartIcon />
+            </Badge>
+            <IconButton aria-label="cart"></IconButton>
+          </IconButton>
         </List>
-       
+
       </Toolbar>
     </AppBar>
   );

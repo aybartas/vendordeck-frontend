@@ -1,12 +1,11 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { request } from "http";
 
 axios.defaults.baseURL = "http://localhost:5050/api/";
 axios.defaults.withCredentials = true;
 
 
 axios.interceptors.response.use(
-  response => { return response},
+  (  response: any) => { return response},
   (error: AxiosError) => {
     const { data, status } = error.response!;
     switch (status) {

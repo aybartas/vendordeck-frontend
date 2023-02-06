@@ -17,11 +17,8 @@ import { useStoreContext } from "../../context/Context";
 import displayCalculatedCurrency from "../../utils/caculations";
 
 
-interface Props {
-  product: Product;
-}
-export default function ProductCard({ product }: Props) {
-  const {setBasket} = useStoreContext();
+export default function ProductCard({ name, imageUrl, price, brand, type, id }: Product) {
+  const { setBasket } = useStoreContext();
 
   const [loading, setLoading] = useState(false);
 
@@ -30,16 +27,14 @@ export default function ProductCard({ product }: Props) {
     setLoading(true);
     console.log(" after setLoading: true");
     apiAgent.Basket.addItem(productId)
-    .then(basket => setBasket(basket))
-    .catch((error) => console.log(error))
-    .finally(() => {
+      .then(basket => setBasket(basket))
+      .catch((error) => console.log(error))
+      .finally(() => {
         console.log(" before setloading false");
         setLoading(false);
         console.log("after setLoadingFalse");
       });
   }
-
-  console.log("productCard will return");
 
   return (
     <Card>
@@ -47,8 +42,8 @@ export default function ProductCard({ product }: Props) {
         titleTypographyProps={{
           sx: { fontWeight: "bold", color: "" },
         }}
-        avatar={<Avatar>{product.name.charAt(0).toUpperCase()}</Avatar>}
-        title={product.name}
+        avatar={<Avatar>{name.charAt(0).toUpperCase()}</Avatar>}
+        title={name}
       />
       <CardMedia
         component="img"
@@ -58,25 +53,25 @@ export default function ProductCard({ product }: Props) {
           backgroundSize: "contain",
           bgcolor: "primary.light",
         }}
-        image={product.imageUrl}
+        image={imageUrl}
       />
       <CardContent>
         <Typography gutterBottom color="secondary" variant="h5">
-          ${displayCalculatedCurrency(product.price)}
+          ${displayCalculatedCurrency(price)}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {product.brand} / {product.type}
+          {brand} / {type}
         </Typography>
       </CardContent>
       <CardActions>
         <LoadingButton
           loading={loading}
-          onClick={() => handleAddItem(product.id)}
+          onClick={() => handleAddItem(id)}
           size="small"
         >
           Add To Cart
         </LoadingButton>
-        <Button component={Link} to={`/catalog/${product.id}`} size="small">
+        <Button component={Link} to={`/catalog/${id}`} size="small">
           View
         </Button>
       </CardActions>

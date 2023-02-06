@@ -16,20 +16,15 @@ import displayCalculatedCurrency from "../../utils/caculations";
 import { useStoreContext } from "../../context/Context";
 import { LoadingButton } from "@mui/lab";
 
-interface ProductDetailUrlParams {
-  id: string;
-}
-
 export default function ProductDetail() {
-  // get id parameter in url
-  const { id } = useParams<ProductDetailUrlParams>();
+  const { id } = useParams<{ id: string }>();
   // get basket
-  const { basket,removeItem, setBasket } = useStoreContext();
+  const { basket, removeItem, setBasket } = useStoreContext();
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [quantity, setQuantity] = useState(0);
   const basketItem = basket?.basketItems.find(
-    (I) => I.productId === parseInt(id)
+    (I) => I.productId === Number(id)
   );
 
   function handleInputChange(event: any) {
@@ -51,10 +46,10 @@ export default function ProductDetail() {
           .then((basket) => setBasket(basket))
           .catch((error) => console.log(error));
       }
-      else{
-          const updatedQuanttiy = basketItem.quantity - quantity;
-          apiAgent.Basket.removeItem(currentProduct.id,updatedQuanttiy)
-          .then(() => removeItem(currentProduct.id,updatedQuanttiy))
+      else {
+        const updatedQuanttiy = basketItem.quantity - quantity;
+        apiAgent.Basket.removeItem(currentProduct.id, updatedQuanttiy)
+          .then(() => removeItem(currentProduct.id, updatedQuanttiy))
           .catch(error => console.log(error));
       }
     }
@@ -62,7 +57,7 @@ export default function ProductDetail() {
 
   useEffect(() => {
     if (basketItem) setQuantity(basketItem.quantity);
-    apiAgent.Catalog.productDetails(parseInt(id))
+    apiAgent.Catalog.productDetails(parseInt(id ?? ""))
       .then((response) => setCurrentProduct(response))
       .catch((error) => console.log(error))
       .finally(() => setIsLoading(false));
@@ -117,7 +112,7 @@ export default function ProductDetail() {
           </Grid>
           <Grid item xs={6}>
             <LoadingButton
-            disabled = {basketItem?.quantity === quantity || (!basketItem && quantity === 0)  }
+              disabled={basketItem?.quantity === quantity || (!basketItem && quantity === 0)}
               sx={{ height: "55px" }}
               color="primary"
               size="large"
