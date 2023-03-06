@@ -2,7 +2,7 @@ import { Container, CssBaseline, CircularProgress } from "@mui/material";
 import Header from "./Header";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useEffect, useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { useStoreContext } from "../context/Context";
 import { getCookie } from "../utils/cookiesUtils";
@@ -15,8 +15,8 @@ import ContactPage from "../features/contact/ContactPage";
 import BasketPage from "../features/basket/BasketPage";
 import CheckoutPage from "../features/checkout/CheckoutPage";
 import { ToastContainer } from "react-toastify";
-import React from "react";
 import ServerError from "../errors/ServerError";
+import NotFound from "../errors/NotFound";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -65,6 +65,8 @@ function App() {
           <Route path="/basket" element={<BasketPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/server-error" element={<ServerError />} />
+          <Route path="/not-found" element={<NotFound />} />
+          <Route path="*" element={<Navigate replace to="/not-found" />} />
         </Routes>
       </Container>
     </ThemeProvider>

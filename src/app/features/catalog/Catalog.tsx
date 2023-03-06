@@ -3,18 +3,27 @@ import { apiAgent } from "../../api/ApiService";
 import { Product } from "../../models/product";
 
 import ProductList from "./ProductList";
-import React from "react";
+import Loading from "../../layout/Loading";
 
 export default function Catalog() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
 
+  if (loading) return <Loading message="Loading products..."></Loading>;
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    apiAgent.Catalog.catalogList().then((response) => setProducts(response));
+    setLoading(true);
+    apiAgent.Catalog.catalogList()
+      .then((response) => {
+        setProducts(response);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   return (
-    <Fragment>
+    <>
       <ProductList products={products}></ProductList>
-    </Fragment>
+    </>
   );
 }

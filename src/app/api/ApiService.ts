@@ -2,11 +2,14 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import {  toast } from 'react-toastify';
 import { globalNavigate } from "../global/GlobalHistory";
 
+
+const sleep = () => new Promise(resolve => setTimeout(resolve,1000))
+
 axios.defaults.baseURL = "http://localhost:5050/api/";
 axios.defaults.withCredentials = true;
-
 axios.interceptors.response.use(
-  (response: any) => {
+  async (response: AxiosResponse) => {
+    await sleep();
     return response;
   },
   (error: AxiosError) => {
