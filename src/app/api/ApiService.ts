@@ -1,25 +1,33 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
+import {  toast } from 'react-toastify';
+import { globalNavigate } from "../global/GlobalHistory";
 
 axios.defaults.baseURL = "http://localhost:5050/api/";
 axios.defaults.withCredentials = true;
 
-
 axios.interceptors.response.use(
-  (  response: any) => { return response},
+  (response: any) => {
+    return response;
+  },
   (error: AxiosError) => {
-    const { data, status } = error.response!;
+    const { data, status } = error.response as AxiosResponse;
     switch (status) {
       case 400:
-        console.log(data.title);
-        // toast.error(data.title);
+        if (data.errors) {
+          const modelStateErrors : string [] = [];
+          for (const key in data.errors) {
+              modelStateErrors.push(data.errors[key])
+          }
+          throw modelStateErrors.flat();
+        }
+        toast.error(data.title);
         break;
       case 401:
-        console.log(data.title)
-        // toast.error(data.title);
+        toast.error(data.title);
         break;
       case 500:
-        console.log(data.title)
-        // toast.error(data.title);
+        globalNavigate("/server-error",{state:{error:data}})
+        toast.error(data.title);
         break;
       default:
         break;
@@ -43,16 +51,18 @@ const Catalog = {
 };
 
 const Basket = {
-  get : () => requests.get("basket"),
-  addItem : (produtId : number, quantity = 1) => requests.post("basket",
-  {
-    ProductId: produtId,
-    Quantity: quantity
-  }),
-  removeItem : (productId : number, quantity = 1) => requests.delete(`basket?productId=${productId}&quantity=${quantity}`) 
-}
+  get: () => requests.get("basket"),
+  addItem: (produtId: number, quantity = 1) =>
+    requests.post("basket", {
+      ProductId: produtId,
+      Quantity: quantity,
+    }),
+  removeItem: (productId: number, quantity = 1) =>
+    requests.delete(`basket?productId=${productId}&quantity=${quantity}`),
+};
 const TestErrors = {
-  getServerError: () => requests.get("errorTest/server-error"),
+  getServerError: () =>
+    requests.get("errorTest/server-error").catch((error : AxiosError) => console.log(error)),
   getValidationError: () => requests.get("errorTest/validation-error"),
   getUnauthorized: () => requests.get("errorTest/unauthorized"),
   getBadRequest: () => requests.get("errorTest/bad-request"),
@@ -62,5 +72,5 @@ const TestErrors = {
 export const apiAgent = {
   Catalog,
   TestErrors,
-  Basket
+  Basket,
 };

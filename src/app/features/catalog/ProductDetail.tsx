@@ -15,6 +15,7 @@ import { apiAgent } from "../../api/ApiService";
 import displayCalculatedCurrency from "../../utils/caculations";
 import { useStoreContext } from "../../context/Context";
 import { LoadingButton } from "@mui/lab";
+import React from "react";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -45,12 +46,11 @@ export default function ProductDetail() {
         apiAgent.Basket.addItem(currentProduct.id, newQuantity)
           .then((basket) => setBasket(basket))
           .catch((error) => console.log(error));
-      }
-      else {
+      } else {
         const updatedQuanttiy = basketItem.quantity - quantity;
         apiAgent.Basket.removeItem(currentProduct.id, updatedQuanttiy)
           .then(() => removeItem(currentProduct.id, updatedQuanttiy))
-          .catch(error => console.log(error));
+          .catch((error) => console.log(error));
       }
     }
   }
@@ -62,7 +62,6 @@ export default function ProductDetail() {
       .catch((error) => console.log(error))
       .finally(() => setIsLoading(false));
   }, [id, basketItem]);
-
 
   if (isLoading) return <h3> Loading...</h3>;
 
@@ -80,7 +79,6 @@ export default function ProductDetail() {
         <Typography variant="h3"> {currentProduct.name}</Typography>
         <Divider></Divider>
         <Typography variant="h4">
-          {" "}
           ${displayCalculatedCurrency(currentProduct.price)}
         </Typography>
         <TableContainer sx={{ mt: "3rem" }}>
@@ -112,7 +110,10 @@ export default function ProductDetail() {
           </Grid>
           <Grid item xs={6}>
             <LoadingButton
-              disabled={basketItem?.quantity === quantity || (!basketItem && quantity === 0)}
+              disabled={
+                basketItem?.quantity === quantity ||
+                (!basketItem && quantity === 0)
+              }
               sx={{ height: "55px" }}
               color="primary"
               size="large"

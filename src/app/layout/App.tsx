@@ -1,19 +1,22 @@
-import { Container, CssBaseline, CircularProgress } from '@mui/material';
+import { Container, CssBaseline, CircularProgress } from "@mui/material";
 import Header from "./Header";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
-import 'react-toastify/dist/ReactToastify.css';
-import { useStoreContext } from '../context/Context';
+import "react-toastify/dist/ReactToastify.css";
+import { useStoreContext } from "../context/Context";
 import { getCookie } from "../utils/cookiesUtils";
-import { apiAgent } from '../api/ApiService';
-import HomePage from '../features/home/HomePage';
-import Catalog from '../features/catalog/Catalog';
-import ProductDetail from '../features/catalog/ProductDetail';
-import AboutPage from '../features/about/AboutPage';
-import ContactPage from '../features/contact/ContactPage';
-import BasketPage from '../features/basket/BasketPage';
-import CheckoutPage from '../features/checkout/CheckoutPage';
+import { apiAgent } from "../api/ApiService";
+import HomePage from "../features/home/HomePage";
+import Catalog from "../features/catalog/Catalog";
+import ProductDetail from "../features/catalog/ProductDetail";
+import AboutPage from "../features/about/AboutPage";
+import ContactPage from "../features/contact/ContactPage";
+import BasketPage from "../features/basket/BasketPage";
+import CheckoutPage from "../features/checkout/CheckoutPage";
+import { ToastContainer } from "react-toastify";
+import React from "react";
+import ServerError from "../errors/ServerError";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -31,26 +34,25 @@ function App() {
   });
 
   useEffect(() => {
-    const buyerId = getCookie('buyerId');
+    const buyerId = getCookie("buyerId");
     if (buyerId) {
       apiAgent.Basket.get()
-        .then(basket => setBasket(basket))
-        .catch(error => console.log(error))
+        .then((basket) => setBasket(basket))
+        .catch((error) => console.log(error))
         .finally(() => setLoading(false));
-    }
-    else {
+    } else {
       setLoading(false);
     }
-
   }, [setBasket]);
 
-  if (loading) return (<CircularProgress />);
+  if (loading) return <CircularProgress />;
 
   function handleThemeChange() {
     setDarkMode(!darkMode);
   }
   return (
     <ThemeProvider theme={theme}>
+      <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
       <CssBaseline />
       <Header darkMode={darkMode} handleThemeChange={handleThemeChange} />
       <Container>
@@ -62,8 +64,8 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/basket" element={<BasketPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/server-error" element={<ServerError />} />
         </Routes>
-
       </Container>
     </ThemeProvider>
   );

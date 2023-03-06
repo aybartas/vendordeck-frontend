@@ -5,10 +5,12 @@ import reportWebVitals from "./reportWebVitals";
 import "./app/layout/styles.css";
 import { BrowserRouter } from "react-router-dom";
 import { ContextProvider } from "./app/context/Context";
+import { GlobalHistory } from "./app/global/GlobalHistory";
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
+      <GlobalHistory />
       <ContextProvider>
         <App />
       </ContextProvider>

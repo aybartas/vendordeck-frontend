@@ -12,12 +12,20 @@ import {
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Product } from "../../models/product";
-import { apiAgent } from '../../api/ApiService';
+import { apiAgent } from "../../api/ApiService";
 import { useStoreContext } from "../../context/Context";
 import displayCalculatedCurrency from "../../utils/caculations";
 
+import React from "react";
 
-export default function ProductCard({ name, imageUrl, price, brand, type, id }: Product) {
+export default function ProductCard({
+  name,
+  imageUrl,
+  price,
+  brand,
+  type,
+  id,
+}: Product) {
   const { setBasket } = useStoreContext();
 
   const [loading, setLoading] = useState(false);
@@ -27,7 +35,7 @@ export default function ProductCard({ name, imageUrl, price, brand, type, id }: 
     setLoading(true);
     console.log(" after setLoading: true");
     apiAgent.Basket.addItem(productId)
-      .then(basket => setBasket(basket))
+      .then((basket) => setBasket(basket))
       .catch((error) => console.log(error))
       .finally(() => {
         console.log(" before setloading false");
