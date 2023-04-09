@@ -11,7 +11,6 @@ import {
   Typography,
 } from "@mui/material";
 import { Add, Delete, Remove } from "@mui/icons-material";
-import { useStoreContext } from "../../context/Context";
 import { Box } from "@mui/system";
 import { apiAgent } from "../../api/ApiService";
 import { LoadingButton } from "@mui/lab";
@@ -19,10 +18,13 @@ import { BasketSummary } from "./BasketSummary";
 import displayCalculatedCurrency from "../../utils/caculations";
 import { Link } from "react-router-dom";
 import { Fragment, useState } from "react";
-import React from "react";
+import { useAppDispatch, useAppSelector } from "../../store/configureStore";
+import { removeItem, setBasket } from "./basketSlice";
 
 export default function BasketPage() {
-  const { basket, setBasket, removeItem } = useStoreContext();
+  const dispatch = useAppDispatch();
+  const { basket } = useAppSelector((state) => state.basket);
+
   const [status, setStatus] = useState({
     loading: false,
     name: "",
@@ -31,10 +33,9 @@ export default function BasketPage() {
   function handleAddItemToBasket(productId: number, name: string) {
     setStatus({ loading: true, name: name });
     apiAgent.Basket.addItem(productId, 1)
-      .then((basket) => setBasket(basket))
+      .then((basket) => dispatch(setBasket(basket)))
       .catch((error) => console.log(error))
       .finally(() => {
-        console.log("add item finally");
         setStatus({ loading: false, name: "" });
       });
   }
@@ -46,15 +47,12 @@ export default function BasketPage() {
   ) {
     setStatus({ loading: true, name: name });
     apiAgent.Basket.removeItem(productId, quantity)
-      .then(() => removeItem(productId, quantity))
+      .then(() => dispatch(removeItem({ productId, quantity })))
       .catch((error) => console.log(error))
       .finally(() => setStatus({ loading: false, name: "" }));
   }
 
   if (!basket) return <Typography> Basket is empty</Typography>;
-
-  console.log("basketpage will return");
-  console.log("basthfddfgn");
 
   return (
     <Fragment>

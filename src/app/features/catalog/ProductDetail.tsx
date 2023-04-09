@@ -13,17 +13,19 @@ import { useParams } from "react-router-dom";
 import { Product } from "../../models/product";
 import { apiAgent } from "../../api/ApiService";
 import displayCalculatedCurrency from "../../utils/caculations";
-import { useStoreContext } from "../../context/Context";
 import { LoadingButton } from "@mui/lab";
-import React from "react";
+import { useAppDispatch, useAppSelector } from "../../store/configureStore";
+import { removeItem, setBasket } from "../basket/basketSlice";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   // get basket
-  const { basket, removeItem, setBasket } = useStoreContext();
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [quantity, setQuantity] = useState(0);
+  const dispatch = useAppDispatch();
+  const { basket } = useAppSelector((state) => state.basket);
+
   const basketItem = basket?.basketItems.find(
     (I) => I.productId === Number(id)
   );
@@ -44,12 +46,19 @@ export default function ProductDetail() {
           : quantity;
 
         apiAgent.Basket.addItem(currentProduct.id, newQuantity)
-          .then((basket) => setBasket(basket))
+          .then((basket) => dispatch(setBasket(basket)))
           .catch((error) => console.log(error));
       } else {
         const updatedQuanttiy = basketItem.quantity - quantity;
         apiAgent.Basket.removeItem(currentProduct.id, updatedQuanttiy)
-          .then(() => removeItem(currentProduct.id, updatedQuanttiy))
+          .then(() =>
+            dispatch(
+              removeItem({
+                productId: currentProduct.id,
+                quantity: updatedQuanttiy,
+              })
+            )
+          )
           .catch((error) => console.log(error));
       }
     }

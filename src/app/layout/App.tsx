@@ -4,7 +4,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import { useStoreContext } from "../context/Context";
 import { getCookie } from "../utils/cookiesUtils";
 import { apiAgent } from "../api/ApiService";
 import HomePage from "../features/home/HomePage";
@@ -17,11 +16,14 @@ import CheckoutPage from "../features/checkout/CheckoutPage";
 import { ToastContainer } from "react-toastify";
 import ServerError from "../errors/ServerError";
 import NotFound from "../errors/NotFound";
+import { store, useAppDispatch } from "../store/configureStore";
+import { setBasket } from "../features/basket/basketSlice";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { setBasket } = useStoreContext();
+
+  const dispatch = useAppDispatch();
 
   const paletteSelection = darkMode ? "dark" : "light";
   const theme = createTheme({
@@ -37,13 +39,13 @@ function App() {
     const buyerId = getCookie("buyerId");
     if (buyerId) {
       apiAgent.Basket.get()
-        .then((basket) => setBasket(basket))
+        .then((basket) => dispatch(setBasket(basket)))
         .catch((error) => console.log(error))
         .finally(() => setLoading(false));
     } else {
       setLoading(false);
     }
-  }, [setBasket]);
+  }, [dispatch]);
 
   if (loading) return <CircularProgress />;
 

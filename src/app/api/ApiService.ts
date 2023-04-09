@@ -7,6 +7,7 @@ const sleep = () => new Promise(resolve => setTimeout(resolve,1000))
 
 axios.defaults.baseURL = "http://localhost:5050/api/";
 axios.defaults.withCredentials = true;
+
 axios.interceptors.response.use(
   async (response: AxiosResponse) => {
     await sleep();
