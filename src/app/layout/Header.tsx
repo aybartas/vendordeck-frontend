@@ -8,10 +8,9 @@ import {
   Badge,
   Typography,
 } from "@mui/material";
-import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { useStoreContext } from "../context/Context";
+import { useAppSelector } from "../store/configureStore";
 
 interface Props {
   darkMode: boolean;
@@ -40,7 +39,7 @@ const navStyles = {
 };
 
 export default function Header({ darkMode, handleThemeChange }: Props) {
-  const { basket } = useStoreContext();
+  const { basket } = useAppSelector((state) => state.basket);
 
   const itemCount = basket?.basketItems.length;
 

@@ -13,17 +13,21 @@ import { useParams } from "react-router-dom";
 import { Product } from "../../models/product";
 import { apiAgent } from "../../api/ApiService";
 import displayCalculatedCurrency from "../../utils/caculations";
-import { useStoreContext } from "../../context/Context";
 import { LoadingButton } from "@mui/lab";
-import React from "react";
+import { useAppDispatch, useAppSelector } from "../../store/configureStore";
+import {
+  addBasketItemAsync,
+  removeBasketItemAsync,
+} from "../basket/basketSlice";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   // get basket
-  const { basket, removeItem, setBasket } = useStoreContext();
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [quantity, setQuantity] = useState(0);
+  const dispatch = useAppDispatch();
+  const { basket, status } = useAppSelector((state) => state.basket);
+
   const basketItem = basket?.basketItems.find(
     (I) => I.productId === Number(id)
   );
@@ -43,14 +47,20 @@ export default function ProductDetail() {
           ? quantity - basketItem.quantity
           : quantity;
 
-        apiAgent.Basket.addItem(currentProduct.id, newQuantity)
-          .then((basket) => setBasket(basket))
-          .catch((error) => console.log(error));
+        dispatch(
+          addBasketItemAsync({
+            productId: currentProduct.id,
+            quantity: newQuantity,
+          })
+        );
       } else {
         const updatedQuanttiy = basketItem.quantity - quantity;
-        apiAgent.Basket.removeItem(currentProduct.id, updatedQuanttiy)
-          .then(() => removeItem(currentProduct.id, updatedQuanttiy))
-          .catch((error) => console.log(error));
+        dispatch(
+          removeBasketItemAsync({
+            productId: currentProduct.id,
+            quantity: updatedQuanttiy,
+          })
+        );
       }
     }
   }
@@ -59,10 +69,10 @@ export default function ProductDetail() {
     if (basketItem) setQuantity(basketItem.quantity);
     apiAgent.Catalog.productDetails(parseInt(id ?? ""))
       .then((response) => setCurrentProduct(response))
-      .catch((error) => console.log(error))
-      .finally(() => setIsLoading(false));
+      .catch((error) => console.log(error));
   }, [id, basketItem]);
 
+  const isLoading = status.includes("pending" + id);
   if (isLoading) return <h3> Loading...</h3>;
 
   if (!currentProduct) return <h3>Product not found </h3>;
@@ -114,6 +124,7 @@ export default function ProductDetail() {
                 basketItem?.quantity === quantity ||
                 (!basketItem && quantity === 0)
               }
+              loading={status.includes("pendingRemoveItem" + currentProduct.id)}
               sx={{ height: "55px" }}
               color="primary"
               size="large"

@@ -11,50 +11,20 @@ import {
   Typography,
 } from "@mui/material";
 import { Add, Delete, Remove } from "@mui/icons-material";
-import { useStoreContext } from "../../context/Context";
 import { Box } from "@mui/system";
-import { apiAgent } from "../../api/ApiService";
 import { LoadingButton } from "@mui/lab";
 import { BasketSummary } from "./BasketSummary";
 import displayCalculatedCurrency from "../../utils/caculations";
 import { Link } from "react-router-dom";
-import { Fragment, useState } from "react";
-import React from "react";
+import { Fragment } from "react";
+import { useAppDispatch, useAppSelector } from "../../store/configureStore";
+import { addBasketItemAsync, removeBasketItemAsync } from "./basketSlice";
 
 export default function BasketPage() {
-  const { basket, setBasket, removeItem } = useStoreContext();
-  const [status, setStatus] = useState({
-    loading: false,
-    name: "",
-  });
-
-  function handleAddItemToBasket(productId: number, name: string) {
-    setStatus({ loading: true, name: name });
-    apiAgent.Basket.addItem(productId, 1)
-      .then((basket) => setBasket(basket))
-      .catch((error) => console.log(error))
-      .finally(() => {
-        console.log("add item finally");
-        setStatus({ loading: false, name: "" });
-      });
-  }
-
-  function handleRemoveItemFromBasket(
-    productId: number,
-    quantity = 1,
-    name: string
-  ) {
-    setStatus({ loading: true, name: name });
-    apiAgent.Basket.removeItem(productId, quantity)
-      .then(() => removeItem(productId, quantity))
-      .catch((error) => console.log(error))
-      .finally(() => setStatus({ loading: false, name: "" }));
-  }
+  const dispatch = useAppDispatch();
+  const { basket, status } = useAppSelector((state) => state.basket);
 
   if (!basket) return <Typography> Basket is empty</Typography>;
-
-  console.log("basketpage will return");
-  console.log("basthfddfgn");
 
   return (
     <Fragment>
@@ -86,21 +56,17 @@ export default function BasketPage() {
                   </Box>
                 </TableCell>
                 <TableCell align="right">
-                  {" "}
                   ${displayCalculatedCurrency(item.price)}
                 </TableCell>
                 <TableCell align="center">
                   <LoadingButton
-                    loading={
-                      status.loading &&
-                      status.name === "remove" + item.productId
-                    }
                     color="error"
                     onClick={() =>
-                      handleRemoveItemFromBasket(
-                        item.productId,
-                        1,
-                        "remove" + item.productId
+                      dispatch(
+                        removeBasketItemAsync({
+                          productId: item.productId,
+                          quantity: item.quantity,
+                        })
                       )
                     }
                   >
@@ -108,14 +74,12 @@ export default function BasketPage() {
                   </LoadingButton>
                   {item.quantity}
                   <LoadingButton
-                    loading={
-                      status.loading && status.name === "add" + item.productId
-                    }
                     color="secondary"
                     onClick={() =>
-                      handleAddItemToBasket(
-                        item.productId,
-                        "add" + item.productId
+                      dispatch(
+                        addBasketItemAsync({
+                          productId: item.productId,
+                        })
                       )
                     }
                   >
@@ -127,16 +91,16 @@ export default function BasketPage() {
                 </TableCell>
                 <TableCell align="right">
                   <LoadingButton
-                    loading={
-                      status.loading &&
-                      status.name === "delete" + item.productId
-                    }
+                    loading={status.includes(
+                      "pendingRemoveItem" + item.productId
+                    )}
                     color="error"
                     onClick={() =>
-                      handleRemoveItemFromBasket(
-                        item.productId,
-                        item.quantity,
-                        "delete" + item.productId
+                      dispatch(
+                        removeBasketItemAsync({
+                          productId: item.productId,
+                          quantity: item.quantity,
+                        })
                       )
                     }
                   >

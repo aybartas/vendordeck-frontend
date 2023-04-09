@@ -4,17 +4,18 @@ import App from "./app/layout/App";
 import reportWebVitals from "./reportWebVitals";
 import "./app/layout/styles.css";
 import { BrowserRouter } from "react-router-dom";
-import { ContextProvider } from "./app/context/Context";
 import { GlobalHistory } from "./app/global/GlobalHistory";
+import { Provider } from "react-redux";
+import { store } from "./app/store/configureStore";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <GlobalHistory />
-      <ContextProvider>
+    <Provider store={store}>
+      <BrowserRouter>
+        <GlobalHistory />
         <App />
-      </ContextProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );
