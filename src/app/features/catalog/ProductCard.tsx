@@ -9,15 +9,12 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Product } from "../../models/product";
-import { apiAgent } from "../../api/ApiService";
 import displayCalculatedCurrency from "../../utils/caculations";
 
-import React from "react";
-import { useAppDispatch } from "../../store/configureStore";
-import { setBasket } from "../basket/basketSlice";
+import { useAppDispatch, useAppSelector } from "../../store/configureStore";
+import { addBasketItemAsync } from "../basket/basketSlice";
 
 export default function ProductCard({
   name,
@@ -28,22 +25,9 @@ export default function ProductCard({
   id,
 }: Product) {
   const dispatch = useAppDispatch();
-
-  const [loading, setLoading] = useState(false);
-
-  function handleAddItem(productId: number) {
-    console.log("beforeSetLoading true");
-    setLoading(true);
-    console.log(" after setLoading: true");
-    apiAgent.Basket.addItem(productId)
-      .then((basket) => dispatch(setBasket(basket)))
-      .catch((error) => console.log(error))
-      .finally(() => {
-        console.log(" before setloading false");
-        setLoading(false);
-        console.log("after setLoadingFalse");
-      });
-  }
+  const { status } = useAppSelector((state) => state.basket);
+  
+  const isLoading = status.includes("pendingAddItem" + id);
 
   return (
     <Card>
@@ -74,8 +58,8 @@ export default function ProductCard({
       </CardContent>
       <CardActions>
         <LoadingButton
-          loading={loading}
-          onClick={() => handleAddItem(id)}
+          loading={isLoading}
+          onClick={() => dispatch(addBasketItemAsync({ productId: id }))}
           size="small"
         >
           Add To Cart
