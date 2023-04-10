@@ -1,25 +1,22 @@
-import { Fragment, useEffect, useState } from "react";
-import { apiAgent } from "../../api/ApiService";
-import { Product } from "../../models/product";
-
+import { useEffect } from "react";
 import ProductList from "./ProductList";
 import Loading from "../../layout/Loading";
+import { useAppDispatch, useAppSelector } from "../../store/configureStore";
+import { fetchProductsAsync, productSelectors } from "./catalogSlice";
 
 export default function Catalog() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(false);
+  const products = useAppSelector(productSelectors.selectAll);
+  const { productsLoaded, status } = useAppSelector((state) => state.catalog);
+  const dispatch = useAppDispatch();
 
-  if (loading) return <Loading message="Loading products..."></Loading>;
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    setLoading(true);
-    apiAgent.Catalog.catalogList()
-      .then((response) => {
-        setProducts(response);
-      })
-      .finally(() => setLoading(false));
-  }, []);
+    if (!productsLoaded) {
+      dispatch(fetchProductsAsync());
+    }
+  }, [dispatch, productsLoaded]);
+
+  if (status.includes("pending"))
+    return <Loading message="Loading products..."></Loading>;
 
   return (
     <>

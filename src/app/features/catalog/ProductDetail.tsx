@@ -19,15 +19,18 @@ import {
   addBasketItemAsync,
   removeBasketItemAsync,
 } from "../basket/basketSlice";
+import { fetchProductAsync, productSelectors } from "./catalogSlice";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
-  // get basket
-  const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(0);
   const dispatch = useAppDispatch();
-  const { basket, status } = useAppSelector((state) => state.basket);
 
+  const { basket, status } = useAppSelector((state) => state.basket);
+  const currentProduct = useAppSelector((state) =>
+    productSelectors.selectById(state, Number(id))
+  );
+  const { status: catalogStatus } = useAppSelector((state) => state.catalog);
   const basketItem = basket?.basketItems.find(
     (I) => I.productId === Number(id)
   );
@@ -67,13 +70,10 @@ export default function ProductDetail() {
 
   useEffect(() => {
     if (basketItem) setQuantity(basketItem.quantity);
-    apiAgent.Catalog.productDetails(parseInt(id ?? ""))
-      .then((response) => setCurrentProduct(response))
-      .catch((error) => console.log(error));
-  }, [id, basketItem]);
+    if (!currentProduct) dispatch(fetchProductAsync(Number(id)));
+  }, [id, basketItem, currentProduct, dispatch]);
 
-  const isLoading = status.includes("pending" + id);
-  if (isLoading) return <h3> Loading...</h3>;
+  if (catalogStatus.includes("pending")) return <h3> Loading...</h3>;
 
   if (!currentProduct) return <h3>Product not found </h3>;
   return (
