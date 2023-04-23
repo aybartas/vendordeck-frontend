@@ -26,7 +26,7 @@ export default function ProductCard({
 }: Product) {
   const dispatch = useAppDispatch();
   const { status } = useAppSelector((state) => state.basket);
-  
+
   const isLoading = status.includes("pendingAddItem" + id);
 
   return (
@@ -35,7 +35,7 @@ export default function ProductCard({
         titleTypographyProps={{
           sx: { fontWeight: "bold", color: "" },
         }}
-        avatar={<Avatar>{name.charAt(0).toUpperCase()}</Avatar>}
+        avatar={<Avatar>{name?.charAt(0)?.toUpperCase()}</Avatar>}
         title={name}
       />
       <CardMedia

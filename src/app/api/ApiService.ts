@@ -1,9 +1,9 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import {  toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import { globalNavigate } from "../global/GlobalHistory";
+import { request } from "http";
 
-
-const sleep = () => new Promise(resolve => setTimeout(resolve,1000))
+const sleep = () => new Promise((resolve) => setTimeout(resolve, 1000));
 
 axios.defaults.baseURL = "http://localhost:5050/api/";
 axios.defaults.withCredentials = true;
@@ -18,9 +18,9 @@ axios.interceptors.response.use(
     switch (status) {
       case 400:
         if (data.errors) {
-          const modelStateErrors : string [] = [];
+          const modelStateErrors: string[] = [];
           for (const key in data.errors) {
-              modelStateErrors.push(data.errors[key])
+            modelStateErrors.push(data.errors[key]);
           }
           throw modelStateErrors.flat();
         }
@@ -30,7 +30,7 @@ axios.interceptors.response.use(
         toast.error(data.title);
         break;
       case 500:
-        globalNavigate("/server-error",{state:{error:data}})
+        globalNavigate("/server-error", { state: { error: data } });
         toast.error(data.title);
         break;
       default:
@@ -52,6 +52,7 @@ const requests = {
 const Catalog = {
   catalogList: () => requests.get("products"),
   productDetails: (id: number) => requests.get(`products/${id}`),
+  filterValues: () => requests.get("products/filters"),
 };
 
 const Basket = {
@@ -66,7 +67,9 @@ const Basket = {
 };
 const TestErrors = {
   getServerError: () =>
-    requests.get("errorTest/server-error").catch((error : AxiosError) => console.log(error)),
+    requests
+      .get("errorTest/server-error")
+      .catch((error: AxiosError) => console.log(error)),
   getValidationError: () => requests.get("errorTest/validation-error"),
   getUnauthorized: () => requests.get("errorTest/unauthorized"),
   getBadRequest: () => requests.get("errorTest/bad-request"),
