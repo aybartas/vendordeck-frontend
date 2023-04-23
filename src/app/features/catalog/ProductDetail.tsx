@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Product } from "../../models/product";
 import { apiAgent } from "../../api/ApiService";
 import displayCalculatedCurrency from "../../utils/caculations";
 import { LoadingButton } from "@mui/lab";
