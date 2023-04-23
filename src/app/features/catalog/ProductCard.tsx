@@ -10,11 +10,11 @@ import {
   Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { Product } from "../../models/product";
 import displayCalculatedCurrency from "../../utils/caculations";
 
 import { useAppDispatch, useAppSelector } from "../../store/configureStore";
 import { addBasketItemAsync } from "../basket/basketSlice";
+import { Product } from "../../models/entities/product";
 
 export default function ProductCard({
   name,

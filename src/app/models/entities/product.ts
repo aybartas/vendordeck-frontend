@@ -9,7 +9,3 @@ export interface Product {
   stock?: number;
 }
 
-export interface ProductsResponse {
-  items: Product[];
-  totalCount: number;
-}
