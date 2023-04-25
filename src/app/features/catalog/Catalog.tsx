@@ -52,7 +52,6 @@ export default function Catalog() {
     }
   }, [dispatch, filtersLoaded]);
 
-  const [filterSelection, setFilterSelection] = useState<ProductFilter>();
   const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
   const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
@@ -63,8 +62,6 @@ export default function Catalog() {
   if (status.includes("pending"))
     return <Loading message="Loading products..."></Loading>;
 
-  console.log(minPrice);
-  console.log(maxPrice);
   return (
     <Grid container spacing={2}>
       <Grid item xs={3}>
