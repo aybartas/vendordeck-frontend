@@ -1,7 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { globalNavigate } from "../global/GlobalHistory";
-import { request } from "http";
 
 const sleep = () => new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -43,14 +42,15 @@ axios.interceptors.response.use(
 const responseBody = (response: AxiosResponse) => response.data;
 
 const requests = {
-  get: (url: string) => axios.get(url).then(responseBody),
+  get: (url: string, params?: URLSearchParams) =>
+    axios.get(url, { params }).then(responseBody),
   post: (url: string, body: {}) => axios.post(url, body).then(responseBody),
   put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
   delete: (url: string) => axios.delete(url).then(responseBody),
 };
 
 const Catalog = {
-  catalogList: () => requests.get("products"),
+  catalogList: (params?: URLSearchParams) => requests.get("products", params),
   productDetails: (id: number) => requests.get(`products/${id}`),
   filterValues: () => requests.get("products/filters"),
 };
