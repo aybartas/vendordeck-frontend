@@ -15,15 +15,21 @@ export function ProductParamsToURLSearchParams(
     );
     urlSearchParams.append("sortBy", productParams?.sort?.sortBy?.toString()!);
   }
-  urlSearchParams.append(
-    "searchText",
-    productParams?.searchText?.toString() ?? ""
-  );
 
-  urlSearchParams.append(
-    "dataFilters",
-    JSON.stringify(productParams?.dataFilters)
-  );
-
+  if (productParams?.searchText) {
+    urlSearchParams.append("searchText", productParams?.searchText);
+  }
+  if (productParams?.brands && productParams.brands.length > 0) {
+    urlSearchParams.append("brands", productParams.brands.join(","));
+  }
+  if (productParams?.types && productParams.types.length > 0) {
+    urlSearchParams.append("types", productParams.types.join(","));
+  }
+  if (productParams?.minPrice! > 0) {
+    urlSearchParams.append("minPrice", JSON.stringify(productParams.minPrice));
+  }
+  if (productParams?.maxPrice! > 0) {
+    urlSearchParams.append("maxPrice", JSON.stringify(productParams.maxPrice));
+  }
   return urlSearchParams;
 }

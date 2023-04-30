@@ -56,7 +56,7 @@ export default function BasketPage() {
                   </Box>
                 </TableCell>
                 <TableCell align="right">
-                  ${displayCalculatedCurrency(item.price)}
+                  {displayCalculatedCurrency(item.price)}
                 </TableCell>
                 <TableCell align="center">
                   <LoadingButton

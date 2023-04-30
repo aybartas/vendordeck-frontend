@@ -88,7 +88,7 @@ export default function ProductDetail() {
         <Typography variant="h3"> {currentProduct.name}</Typography>
         <Divider></Divider>
         <Typography variant="h4">
-          ${displayCalculatedCurrency(currentProduct.price)}
+          {displayCalculatedCurrency(currentProduct.price)}
         </Typography>
         <TableContainer sx={{ mt: "3rem" }}>
           <TableBody>
