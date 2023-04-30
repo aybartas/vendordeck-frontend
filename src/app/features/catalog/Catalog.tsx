@@ -30,6 +30,8 @@ import { sortOptions } from "../../constants/filterConstants";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import displayCalculatedCurrency from "../../utils/caculations";
+import { Sort } from "../../models/query/sort";
+import ProductCardSkeleton from "./ProductSkeleton";
 
 export default function Catalog() {
   const products = useAppSelector(productSelectors.selectAll);
@@ -85,7 +87,18 @@ export default function Catalog() {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               label="Sort By"
-              onChange={(e) => {}}
+              value={productParams.sort?.id}
+              onChange={(e) => {
+                const sortOption = sortOptions.find(
+                  (x) => x.id === e.target.value
+                );
+                const newSort: Sort = {
+                  ascending: sortOption?.ascending,
+                  sortBy: sortOption?.sortBy,
+                };
+
+                dispatch(setProductParams({ sort: newSort }));
+              }}
             >
               {sortOptions.map((option) => (
                 <MenuItem key={option.id} value={option.id}>
@@ -204,20 +217,7 @@ export default function Catalog() {
         </Box>
       </Grid>
       <Grid item xs={9}>
-        {status.includes("pending") ? (
-          <Box
-            sx={{
-              width: "100%",
-              height: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Loading message="Products are loading" />
-          </Box>
-        ) : (
-          <ProductList products={products}></ProductList>
-        )}
+        <ProductList products={products} />
       </Grid>
       <Grid item xs={3}></Grid>
       <Grid
