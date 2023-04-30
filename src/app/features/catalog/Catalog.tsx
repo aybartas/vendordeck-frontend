@@ -2,14 +2,18 @@ import { useEffect, useState } from "react";
 import ProductList from "./ProductList";
 import Loading from "../../layout/Loading";
 import { useAppDispatch, useAppSelector } from "../../store/configureStore";
+import SearchIcon from "@mui/icons-material/Search";
 import {
+  applyFilters,
   fetchFiltersAsync,
   fetchProductsAsync,
   productSelectors,
+  setProductParams,
 } from "./catalogSlice";
 import {
   Autocomplete,
   Box,
+  Button,
   Checkbox,
   FormControl,
   Grid,
@@ -23,9 +27,9 @@ import {
   Typography,
 } from "@mui/material";
 import { sortOptions } from "../../constants/filterConstants";
-import { ProductFilter } from "../../models/filters/productFilter";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import displayCalculatedCurrency from "../../utils/caculations";
 
 export default function Catalog() {
   const products = useAppSelector(productSelectors.selectAll);
@@ -33,11 +37,14 @@ export default function Catalog() {
     productsLoaded,
     status,
     filtersLoaded,
+    totalProductCount,
     brands,
     types,
     minPrice,
     maxPrice,
+    productParams,
   } = useAppSelector((state) => state.catalog);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -55,13 +62,6 @@ export default function Catalog() {
   const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
   const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-  function valuetext(val: number) {
-    return `$${val}`;
-  }
-
-  if (status.includes("pending"))
-    return <Loading message="Loading products..."></Loading>;
-
   return (
     <Grid container spacing={2}>
       <Grid item xs={3}>
@@ -71,6 +71,10 @@ export default function Catalog() {
             placeholder="Search a product by name"
             variant="outlined"
             fullWidth
+            value={productParams?.searchText ?? ""}
+            onChange={(e) =>
+              dispatch(setProductParams({ searchText: e.target.value }))
+            }
           ></TextField>
         </Paper>
 
@@ -81,13 +85,12 @@ export default function Catalog() {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               label="Sort By"
-              onChange={
-                (e) => {}
-                // handleFilterChange("sort", e.target.value as number)
-              }
+              onChange={(e) => {}}
             >
               {sortOptions.map((option) => (
-                <MenuItem value={option.id}>{option.label}</MenuItem>
+                <MenuItem key={option.id} value={option.id}>
+                  {option.label}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -114,6 +117,9 @@ export default function Catalog() {
             renderInput={(params) => (
               <TextField {...params} label="Types" placeholder="Types" />
             )}
+            onChange={(_, newValue) =>
+              dispatch(setProductParams({ types: newValue }))
+            }
           />
         </Paper>
 
@@ -142,6 +148,9 @@ export default function Catalog() {
                 placeholder="Select brands to search product"
               />
             )}
+            onChange={(_, newValue) =>
+              dispatch(setProductParams({ brands: newValue }))
+            }
           />
         </Paper>
 
@@ -158,17 +167,57 @@ export default function Catalog() {
           >
             <Slider
               getAriaLabel={() => "Product prices"}
-              value={[minPrice, maxPrice]}
               valueLabelDisplay="auto"
               min={minPrice}
               max={maxPrice}
-              getAriaValueText={valuetext}
+              value={[
+                productParams?.minPrice ?? 0,
+                productParams?.maxPrice ?? 0,
+              ]}
+              getAriaValueText={displayCalculatedCurrency}
+              onChange={(_, newValue) => {
+                const values = newValue as number[];
+                dispatch(setProductParams({ minPrice: values[0] }));
+                dispatch(setProductParams({ maxPrice: values[1] }));
+              }}
             />
           </Box>
         </Paper>
+
+        <Box
+          sx={{
+            mb: 2,
+            mt: 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<SearchIcon />}
+            onClick={() => dispatch(applyFilters())}
+          >
+            Search
+          </Button>
+        </Box>
       </Grid>
       <Grid item xs={9}>
-        <ProductList products={products}></ProductList>
+        {status.includes("pending") ? (
+          <Box
+            sx={{
+              width: "100%",
+              height: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Loading message="Products are loading" />
+          </Box>
+        ) : (
+          <ProductList products={products}></ProductList>
+        )}
       </Grid>
       <Grid item xs={3}></Grid>
       <Grid
@@ -178,8 +227,21 @@ export default function Catalog() {
         justifyContent="space-between"
         alignItems="center"
       >
-        <Typography marginTop="5px">Displaying 1-6 of 30 products</Typography>
-        <Pagination page={2} size="large" count={10} color="secondary" />
+        <Typography marginTop="5px">
+          Displaying {` ${productParams.size}`} of
+          {` ${totalProductCount} `} products
+        </Typography>
+        <Pagination
+          page={productParams.page! + 1}
+          size="large"
+          count={Math.ceil(totalProductCount / 6)}
+          color="secondary"
+          onChange={(_, value) => {
+            console.log("ch", value);
+            dispatch(setProductParams({ page: value - 1 }));
+            dispatch(applyFilters());
+          }}
+        />
       </Grid>
     </Grid>
   );

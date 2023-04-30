@@ -50,7 +50,7 @@ export default function ProductCard({
       />
       <CardContent>
         <Typography gutterBottom color="secondary" variant="h5">
-          ${displayCalculatedCurrency(price)}
+          {displayCalculatedCurrency(price)}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {brand} / {type}

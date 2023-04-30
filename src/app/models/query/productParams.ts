@@ -1,4 +1,3 @@
-import { DataFilter } from "../filters/dataFilter";
 import { Sort } from "./sort";
 
 export interface ProductParams {
@@ -6,5 +5,8 @@ export interface ProductParams {
   size?: number;
   sort?: Sort;
   searchText?: string;
-  dataFilters?: DataFilter[];
+  brands?: string[];
+  types?: string[];
+  minPrice?: number;
+  maxPrice?: number;
 }

@@ -22,7 +22,7 @@ export const fetchProductsAsync = createAsyncThunk<
     thunkAPI.getState().catalog.productParams
   );
   try {
-    return await apiAgent.Catalog.catalogList();
+    return await apiAgent.Catalog.catalogList(params);
   } catch (error: any) {
     return thunkAPI.rejectWithValue({ error: error.data });
   }
@@ -56,6 +56,7 @@ export const catalogSlice = createSlice({
     productsLoaded: false,
     status: "idle",
     filtersLoaded: false,
+    totalProductCount: 0,
     brands: [],
     types: [],
     minPrice: 0,
@@ -64,12 +65,17 @@ export const catalogSlice = createSlice({
   }),
   reducers: {
     setProductParams: (state, action) => {
-      state.productsLoaded = false;
       state.productParams = { ...state.productParams, ...action.payload };
+    },
+    setProductTotalCount: (state, action) => {
+      state.totalProductCount = action.payload;
     },
     resetProductParams: (state) => {
       state.productsLoaded = false;
       state.productParams = getInitialProductParams();
+    },
+    applyFilters: (state) => {
+      state.productsLoaded = false;
     },
   },
 
@@ -80,6 +86,7 @@ export const catalogSlice = createSlice({
     });
     builder.addCase(fetchProductsAsync.fulfilled, (state, action) => {
       productsAdapter.setAll(state, action.payload.items);
+      state.totalProductCount = action.payload.totalCount;
       state.status = "idle";
       state.productsLoaded = true;
     });
@@ -114,7 +121,6 @@ export const catalogSlice = createSlice({
       state.filtersLoaded = true;
     });
     builder.addCase(fetchFiltersAsync.rejected, (state, action) => {
-      console.log(action.payload);
       state.filtersLoaded = true;
     });
   },
@@ -124,4 +130,9 @@ export const productSelectors = productsAdapter.getSelectors(
   (state: RootState) => state.catalog
 );
 
-export const { setProductParams, resetProductParams } = catalogSlice.actions;
+export const {
+  setProductParams,
+  resetProductParams,
+  applyFilters,
+  setProductTotalCount,
+} = catalogSlice.actions;
