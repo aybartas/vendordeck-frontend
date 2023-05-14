@@ -7,9 +7,9 @@ import { apiAgent } from "../../api/ApiService";
 import { RootState } from "../../store/configureStore";
 import { Product } from "../../models/entities/product";
 import { ProductsResponse } from "../../models/responses/productsResponse";
-import { CatalogSlice } from "../../store/models/CatalogSlice";
 import { getInitialProductParams } from "../../utils/product/productUtils";
 import { ProductParamsToURLSearchParams } from "../../utils/query/queryStringUtils";
+import { CatalogSliceState } from "../../store/models/CatalogSliceState";
 
 const productsAdapter = createEntityAdapter<Product>();
 
@@ -52,7 +52,7 @@ export const fetchFiltersAsync = createAsyncThunk(
 
 export const catalogSlice = createSlice({
   name: "catalog",
-  initialState: productsAdapter.getInitialState<CatalogSlice>({
+  initialState: productsAdapter.getInitialState<CatalogSliceState>({
     productsLoaded: false,
     status: "idle",
     filtersLoaded: false,

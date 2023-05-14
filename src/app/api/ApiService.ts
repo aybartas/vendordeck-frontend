@@ -1,6 +1,8 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { globalNavigate } from "../global/GlobalHistory";
+import { LoginRequest } from "../models/requests/loginRequest";
+import { RegisterRequest } from "../models/requests/registerRequest";
 
 const sleep = () => new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -65,6 +67,13 @@ const Basket = {
   removeItem: (productId: number, quantity = 1) =>
     requests.delete(`basket?productId=${productId}&quantity=${quantity}`),
 };
+
+const User = {
+  login: (loginRequest: {}) => requests.post("users/login", loginRequest),
+  register: (registerRequest: RegisterRequest) =>
+    requests.post("users/register", registerRequest),
+  getCurrentUser: () => requests.get("users/currentUser"),
+};
 const TestErrors = {
   getServerError: () =>
     requests
@@ -80,4 +89,5 @@ export const apiAgent = {
   Catalog,
   TestErrors,
   Basket,
+  User,
 };

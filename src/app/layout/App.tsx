@@ -18,6 +18,8 @@ import ServerError from "../errors/ServerError";
 import NotFound from "../errors/NotFound";
 import { store, useAppDispatch } from "../store/configureStore";
 import { setBasket } from "../features/basket/basketSlice";
+import Login from "../features/account/Login";
+import Register from "../features/account/Register";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -66,6 +68,8 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/basket" element={<BasketPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/server-error" element={<ServerError />} />
           <Route path="/not-found" element={<NotFound />} />
           <Route path="*" element={<Navigate replace to="/not-found" />} />
