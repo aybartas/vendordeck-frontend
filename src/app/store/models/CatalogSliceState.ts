@@ -1,6 +1,6 @@
 import { ProductParams } from "../../models/query/productParams";
 
-export interface CatalogSlice {
+export interface CatalogSliceState {
   productsLoaded: boolean;
   status: string;
   filtersLoaded: boolean;
