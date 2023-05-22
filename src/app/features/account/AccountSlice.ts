@@ -29,6 +29,7 @@ export const getCurrentUser = createAsyncThunk<User>(
     try {
       const user = await apiAgent.User.getCurrentUser();
       localStorage.setItem("user", JSON.stringify(user));
+      return user;
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: "User Not Found" });
     }
