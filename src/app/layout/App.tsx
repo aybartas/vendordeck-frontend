@@ -16,17 +16,17 @@ import CheckoutPage from "../features/checkout/CheckoutPage";
 import { ToastContainer } from "react-toastify";
 import ServerError from "../errors/ServerError";
 import NotFound from "../errors/NotFound";
-import { store, useAppDispatch } from "../store/configureStore";
+import { useAppDispatch } from "../store/configureStore";
 import { setBasket } from "../features/basket/basketSlice";
 import Login from "../features/account/Login";
 import Register from "../features/account/Register";
+import { getCurrentUser } from "../features/account/AccountSlice";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const dispatch = useAppDispatch();
-
   const paletteSelection = darkMode ? "dark" : "light";
   const theme = createTheme({
     palette: {
@@ -38,6 +38,8 @@ function App() {
   });
 
   useEffect(() => {
+    // fetch current user
+    // get basket
     const buyerId = getCookie("buyerId");
     if (buyerId) {
       apiAgent.Basket.get()
@@ -48,6 +50,10 @@ function App() {
       setLoading(false);
     }
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, []);
 
   if (loading) return <CircularProgress />;
 
