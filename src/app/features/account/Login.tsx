@@ -28,8 +28,8 @@ export default function Login() {
 
   async function submitForm(data: FieldValues) {
     const result = await dispatch(signInUser(data));
-    console.log(result);
-    navigate("/catalog");
+    console.log("login result", result);
+    if (result) navigate("/catalog");
   }
 
   return (

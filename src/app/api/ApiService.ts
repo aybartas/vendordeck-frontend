@@ -1,21 +1,32 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { globalNavigate } from "../global/GlobalHistory";
-import { LoginRequest } from "../models/requests/loginRequest";
 import { RegisterRequest } from "../models/requests/registerRequest";
+import { store } from "../store/configureStore";
 
-const sleep = () => new Promise((resolve) => setTimeout(resolve, 1000));
+const sleep = () => new Promise((resolve) => setTimeout(resolve, 200));
 
 axios.defaults.baseURL = "http://localhost:5050/api/";
 axios.defaults.withCredentials = true;
-
+axios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers!["Authorization"] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 axios.interceptors.response.use(
   async (response: AxiosResponse) => {
     await sleep();
     return response;
   },
   (error: AxiosError) => {
-    const { data, status } = error.response as AxiosResponse;
+    const { data = {}, status = 500 } = error.response as AxiosResponse;
     switch (status) {
       case 400:
         if (data.errors) {
@@ -28,7 +39,13 @@ axios.interceptors.response.use(
         toast.error(data.title);
         break;
       case 401:
-        toast.error(data.title);
+        toast.error(data.title || "Unauthorized");
+        break;
+      case 404:
+        toast.error(data.title || "Not Found");
+        break;
+      case 302:
+        toast.error("Unauthorized");
         break;
       case 500:
         globalNavigate("/server-error", { state: { error: data } });
