@@ -6,12 +6,13 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Paper } from "@mui/material";
+import { Alert, Paper } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { FieldValues, useForm } from "react-hook-form";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch } from "../../store/configureStore";
 import { signInUser } from "./AccountSlice";
+import { toast } from "react-toastify";
 
 const theme = createTheme();
 
@@ -28,8 +29,12 @@ export default function Login() {
 
   async function submitForm(data: FieldValues) {
     const result = await dispatch(signInUser(data));
-    console.log("login result", result);
-    if (result) navigate("/catalog");
+
+    if ((result.payload as { error: object }).error)
+      toast.error("Invalid credentials");
+    else {
+      navigate("/catalog");
+    }
   }
 
   return (
@@ -81,7 +86,6 @@ export default function Login() {
               error={!!errors.password}
               helperText={errors?.password?.message as string}
             />
-
             <LoadingButton
               disabled={!isValid}
               loading={isSubmitting}

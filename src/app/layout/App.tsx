@@ -1,7 +1,7 @@
 import { Container, CssBaseline, CircularProgress } from "@mui/material";
 import Header from "./Header";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { getCookie } from "../utils/cookiesUtils";
@@ -17,7 +17,7 @@ import { ToastContainer } from "react-toastify";
 import ServerError from "../errors/ServerError";
 import NotFound from "../errors/NotFound";
 import { useAppDispatch } from "../store/configureStore";
-import { setBasket } from "../features/basket/basketSlice";
+import { fetchBasketAsync, setBasket } from "../features/basket/basketSlice";
 import Login from "../features/account/Login";
 import Register from "../features/account/Register";
 import { getCurrentUser } from "../features/account/AccountSlice";
@@ -37,23 +37,18 @@ function App() {
     },
   });
 
-  useEffect(() => {
-    // fetch current user
-    // get basket
-    const buyerId = getCookie("buyerId");
-    if (buyerId) {
-      apiAgent.Basket.get()
-        .then((basket) => dispatch(setBasket(basket)))
-        .catch((error) => console.log(error))
-        .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
+  const initApp = useCallback(async () => {
+    try {
+      await dispatch(getCurrentUser());
+      await dispatch(fetchBasketAsync());
+    } catch (error) {
+      console.log(error);
     }
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getCurrentUser());
-  }, []);
+    initApp().then(() => setLoading(false));
+  }, [initApp]);
 
   if (loading) return <CircularProgress />;
 

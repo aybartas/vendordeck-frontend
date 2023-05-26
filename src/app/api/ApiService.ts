@@ -87,7 +87,7 @@ const Basket = {
 
 const User = {
   login: (loginRequest: {}) => requests.post("users/login", loginRequest),
-  register: (registerRequest: RegisterRequest) =>
+  register: (registerRequest: {}) =>
     requests.post("users/register", registerRequest),
   getCurrentUser: () => requests.get("users/currentUser"),
 };
