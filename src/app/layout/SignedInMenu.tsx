@@ -1,6 +1,6 @@
 import { Button, Fade, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../store/configureStore";
+import { useAppDispatch } from "../store/configureStore";
 import { signOut } from "../features/account/AccountSlice";
 
 export default function SignedInMenu() {

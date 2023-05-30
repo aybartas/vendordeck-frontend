@@ -16,16 +16,16 @@ import CheckoutPage from "../features/checkout/CheckoutPage";
 import { ToastContainer } from "react-toastify";
 import ServerError from "../errors/ServerError";
 import NotFound from "../errors/NotFound";
-import { useAppDispatch } from "../store/configureStore";
-import { fetchBasketAsync, setBasket } from "../features/basket/basketSlice";
+import { useAppDispatch, useAppSelector } from "../store/configureStore";
+import { fetchBasketAsync } from "../features/basket/basketSlice";
 import Login from "../features/account/Login";
 import Register from "../features/account/Register";
 import { getCurrentUser } from "../features/account/AccountSlice";
+import RequireAuth from "../routing/RequireAuth";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const dispatch = useAppDispatch();
   const paletteSelection = darkMode ? "dark" : "light";
   const theme = createTheme({
@@ -40,7 +40,7 @@ function App() {
   const initApp = useCallback(async () => {
     try {
       await dispatch(getCurrentUser());
-      await dispatch(fetchBasketAsync());
+      var a = await dispatch(fetchBasketAsync());
     } catch (error) {
       console.log(error);
     }
@@ -62,18 +62,21 @@ function App() {
       <Header darkMode={darkMode} handleThemeChange={handleThemeChange} />
       <Container>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/catalog" element={<Catalog />} />
-          <Route path="/catalog/:id" element={<ProductDetail />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/basket" element={<BasketPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/server-error" element={<ServerError />} />
-          <Route path="/not-found" element={<NotFound />} />
-          <Route path="*" element={<Navigate replace to="/not-found" />} />
+          <Route path="/" element={<HomePage />}>
+            <Route element={<RequireAuth />}>
+              <Route path="checkout" element={<CheckoutPage />} />
+            </Route>
+            <Route path="catalog" element={<Catalog />} />
+            <Route path="catalog/:id" element={<ProductDetail />} />
+            <Route path="about" element={<AboutPage />} />
+            <Route path="contact" element={<ContactPage />} />
+            <Route path="basket" element={<BasketPage />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+            <Route path="server-error" element={<ServerError />} />
+            <Route path="not-found" element={<NotFound />} />
+            <Route path="*" element={<Navigate replace to="/not-found" />} />
+          </Route>
         </Routes>
       </Container>
     </ThemeProvider>

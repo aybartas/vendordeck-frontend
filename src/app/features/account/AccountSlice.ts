@@ -8,9 +8,10 @@ import { globalNavigate } from "../../global/GlobalHistory";
 export const initialState: AccountState = {
   user: null,
   userLoading: false,
+  token: "",
 };
 
-export const signInUser = createAsyncThunk<User, FieldValues>(
+export const signInUser = createAsyncThunk<string, FieldValues>(
   "account/signInUser",
   async (data: FieldValues, thunkAPI: any) => {
     try {
@@ -62,6 +63,19 @@ export const accountSlice = createSlice({
       state.user = action.payload;
     });
     builder.addCase(getCurrentUser.rejected, (state, action) => {
+      state.userLoading = false;
+      console.log(action.payload);
+    });
+
+    // Sıng In
+    builder.addCase(signInUser.pending, (state) => {
+      state.userLoading = true;
+    });
+    builder.addCase(signInUser.fulfilled, (state, action) => {
+      state.userLoading = false;
+      state.token = action.payload;
+    });
+    builder.addCase(signInUser.rejected, (state, action) => {
       state.userLoading = false;
       console.log(action.payload);
     });
