@@ -14,26 +14,41 @@ import {
   ListItemText,
   Paper,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { LoadingButton } from "@mui/lab";
 import { apiAgent } from "../../api/ApiService";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const theme = createTheme();
 
 export default function Register() {
   const {
     register,
+    setError,
     handleSubmit,
     formState: { isSubmitting, errors, isValid },
   } = useForm({
     mode: "onChange",
   });
 
-  const [validationErrors, setValidationErrors] = useState([]);
+  const navigate = useNavigate();
 
-  function handleApiErrors() {}
+  function handleApiErrors(errors: any) {
+    if (errors) {
+      errors.forEach((error: any) => {
+        if (error.includes("Password")) {
+          setError("password", { message: error });
+        } else if (error.includes("Email")) {
+          setError("email", { message: error });
+        } else if (error.includes("Username")) {
+          setError("username", { message: error });
+        }
+      });
+    }
+    console.log(errors);
+  }
   return (
     <ThemeProvider theme={theme}>
       <Container
@@ -58,9 +73,12 @@ export default function Register() {
           <Box
             component="form"
             onSubmit={handleSubmit((data) =>
-              apiAgent.User.register(data).catch((err) =>
-                setValidationErrors(err)
-              )
+              apiAgent.User.register(data)
+                .then(() => {
+                  toast.success("Registeration is  successful");
+                  navigate("/login");
+                })
+                .catch((err) => handleApiErrors(err))
             )}
             noValidate
             sx={{ mt: 1 }}
@@ -83,6 +101,10 @@ export default function Register() {
               autoComplete="email"
               {...register("email", {
                 required: "Email is required",
+                pattern: {
+                  value: /^[^s@]+@[^s@]+.[^s@]+$/,
+                  message: "Not a valid email address",
+                },
               })}
               error={!!errors.email}
               helperText={errors?.email?.message as string}
@@ -128,18 +150,7 @@ export default function Register() {
                 />
               </Grid>
             </Grid>
-            {validationErrors.length > 0 && (
-              <Alert severity="error">
-                <AlertTitle>Validation Errors</AlertTitle>
-                <List>
-                  {validationErrors.map((error) => (
-                    <ListItem key={error}>
-                      <ListItemText>{error}</ListItemText>
-                    </ListItem>
-                  ))}
-                </List>
-              </Alert>
-            )}
+
             <LoadingButton
               disabled={!isValid}
               loading={isSubmitting}
