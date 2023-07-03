@@ -78,14 +78,14 @@ export const basketSlice = createSlice({
       state.status = "pendingRemoveItem" + action.meta.arg.productId;
     });
     builder.addCase(removeBasketItemAsync.fulfilled, (state, action) => {
-      const { productId, quantity } = action.meta.arg;
-      const itemIndex = state.basket?.basketItems.findIndex(
-        (x) => x.productId === productId
-      );
-      if (itemIndex === -1 || itemIndex === undefined) return;
-      state.basket!.basketItems[itemIndex].quantity -= quantity!;
-      if (state.basket!.basketItems[itemIndex].quantity <= 0)
-        state.basket?.basketItems.splice(itemIndex, 1);
+      // const { productId, quantity } = action.meta.arg;
+      // const itemIndex = state.basket?.basketItems.findIndex(
+      //   (x) => x.productId === productId
+      // );
+      // if (itemIndex === -1 || itemIndex === undefined) return;
+      // state.basket!.basketItems[itemIndex].quantity -= quantity!;
+      // if (state.basket!.basketItems[itemIndex].quantity <= 0)
+      //   state.basket?.basketItems.splice(itemIndex, 1);
       state.status = "idle";
     });
     builder.addCase(removeBasketItemAsync.rejected, (state, action) => {
