@@ -17,7 +17,8 @@ export function BasketSummary() {
       (sum: number, item) => sum + item.quantity * item.price,
       0
     ) ?? 0;
-  const deliveryFee = subtotal > 10000 ? 0 : 500;
+
+  const deliveryFee = subtotal > 100 ? 0 : 10;
 
   return (
     <>

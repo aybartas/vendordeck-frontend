@@ -24,8 +24,10 @@ export default function BasketPage() {
   const dispatch = useAppDispatch();
   const { basket, status } = useAppSelector((state) => state.basket);
 
-  if (!basket) return <Typography> Basket is empty</Typography>;
+  if (!basket || !basket.basketItems || basket.basketItems.length === 0)
+    return <Typography> Basket is empty</Typography>;
 
+  console.log(basket.basketItems);
   return (
     <Fragment>
       <TableContainer component={Paper}>
@@ -65,7 +67,7 @@ export default function BasketPage() {
                       dispatch(
                         removeBasketItemAsync({
                           productId: item.productId,
-                          quantity: item.quantity,
+                          quantity: 1,
                         })
                       )
                     }
@@ -87,7 +89,7 @@ export default function BasketPage() {
                   </LoadingButton>
                 </TableCell>
                 <TableCell align="right">
-                  ${((item.price * item.quantity) / 100).toFixed(2)}
+                  ${(item.price * item.quantity).toFixed(2)}
                 </TableCell>
                 <TableCell align="right">
                   <LoadingButton
