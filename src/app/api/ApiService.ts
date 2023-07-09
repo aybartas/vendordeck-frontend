@@ -4,7 +4,7 @@ import { globalNavigate } from "../global/GlobalHistory";
 import { RegisterRequest } from "../models/requests/registerRequest";
 import { store } from "../store/configureStore";
 
-const sleep = () => new Promise((resolve) => setTimeout(resolve, 200));
+const sleep = () => new Promise((resolve) => setTimeout(resolve, 100));
 
 axios.defaults.baseURL = "http://localhost:5050/api/";
 axios.defaults.withCredentials = true;
@@ -91,6 +91,14 @@ const User = {
     requests.post("users/register", registerRequest),
   getCurrentUser: () => requests.get("users/currentUser"),
 };
+
+const Order = {
+  createOrder: (createOrderRequest: {}) =>
+    requests.post("orders", createOrderRequest),
+  getOrderById: (id: number) => requests.get(`orders/${id}`),
+  orderList: (params?: URLSearchParams) => requests.get("orders", params),
+};
+
 const TestErrors = {
   getServerError: () =>
     requests
@@ -107,4 +115,5 @@ export const apiAgent = {
   TestErrors,
   Basket,
   User,
+  Order,
 };
