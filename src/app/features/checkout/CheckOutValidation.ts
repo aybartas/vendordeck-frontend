@@ -8,7 +8,7 @@ export const validationSchema = yup.object({
     state: yup.string().required("State is required"),
     zip: yup.string().required("Zip is required"),
   }),
-  payment: yup.object({
-    nameOnCard: yup.string().required("Name on card is required"),
-  }),
+  // payment: yup.object({
+  //   nameOnCard: yup.string().required("Name on card is required"),
+  // }),
 });

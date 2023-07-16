@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { Basket } from "../../models/entities/basket";
 import { apiAgent } from "../../api/ApiService";
-import { getCookie } from "../../utils/cookiesUtils";
+import { stat } from "fs";
 
 interface BasketState {
   basket: Basket | null;
@@ -59,6 +59,10 @@ export const basketSlice = createSlice({
     setBasket: (state, action) => {
       state.basket = action.payload;
     },
+    emptyBasket: (state) => {
+      state.basket = null;
+      fetchBasketAsync();
+    },
   },
   extraReducers: (builder) => {
     // Add basket Item
@@ -108,4 +112,4 @@ export const basketSlice = createSlice({
   },
 });
 
-export const { setBasket } = basketSlice.actions;
+export const { setBasket, emptyBasket } = basketSlice.actions;

@@ -12,7 +12,7 @@ import ProductDetail from "../features/catalog/ProductDetail";
 import AboutPage from "../features/about/AboutPage";
 import ContactPage from "../features/contact/ContactPage";
 import BasketPage from "../features/basket/BasketPage";
-import CheckoutPage from "../features/checkout/CheckoutPage";
+import CheckoutPage from "../features/checkout/CheckOutPage";
 import { ToastContainer } from "react-toastify";
 import ServerError from "../errors/ServerError";
 import NotFound from "../errors/NotFound";

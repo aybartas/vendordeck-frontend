@@ -15,6 +15,10 @@ import Review from "./Review";
 import { FieldValues, FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { validationSchema } from "./CheckOutValidation";
+import { apiAgent } from "../../api/ApiService";
+import { toast } from "react-toastify";
+import { useAppDispatch } from "../../store/configureStore";
+import { emptyBasket } from "../basket/basketSlice";
 
 function Copyright() {
   return (
@@ -31,43 +35,61 @@ function Copyright() {
 
 const steps = ["Shipping address", "Payment details", "Review your order"];
 
-function getStepContent(step: number) {
-  switch (step) {
-    case 0:
-      return <AddressForm />;
-    case 1:
-      return <PaymentForm />;
-    case 2:
-      return <Review />;
-    default:
-      throw new Error("Unknown step");
-  }
-}
-
-export default function Checkout() {
-  const form = useForm({
-    mode: "onChange",
+export default function CheckOutPage() {
+  const formOptions = useForm({
+    mode: "onTouched",
     resolver: yupResolver(validationSchema),
   });
 
-  const { handleSubmit, formState, getValues } = form;
+  const { handleSubmit, formState, getValues } = formOptions;
+  const { isDirty, isValid } = formState;
 
   const [activeStep, setActiveStep] = React.useState(0);
+  const [orderNumber, setOrderNumber] = React.useState(0);
+  const [loading, setLoading] = React.useState(false);
+  const dispatch = useAppDispatch();
 
   const handleNext = (data: FieldValues) => {
-    if (activeStep === 0) console.log(data);
-
-    setActiveStep(activeStep + 1);
+    if (activeStep === 2) {
+      setLoading(true);
+      apiAgent.Order.createOrder(data)
+        .then((res) => {
+          setOrderNumber(res.orderNumber);
+          setActiveStep(activeStep + 1);
+          setLoading(false);
+          emptyBasket();
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error("Error creating order");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      setActiveStep(activeStep + 1);
+    }
   };
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
 
-  console.log("getValues", getValues());
+  const stepContent = React.useMemo(() => {
+    switch (activeStep) {
+      case 0:
+        return <AddressForm />;
+      case 1:
+        return <PaymentForm />;
+      case 2:
+        return <Review />;
+      default:
+        <></>;
+    }
+  }, [activeStep]);
 
   return (
-    <FormProvider {...form}>
+    <FormProvider {...formOptions}>
       <Container component="main" maxWidth="lg" sx={{ mb: 4 }}>
         <Paper
           variant="outlined"
@@ -89,14 +111,14 @@ export default function Checkout() {
                 Thank you for your order.
               </Typography>
               <Typography variant="subtitle1">
-                Your order number is #2001539. We have emailed your order
+                Your order number is #{orderNumber}. We have emailed your order
                 confirmation, and will send you an update when your order has
                 shipped.
               </Typography>
             </React.Fragment>
           ) : (
             <form onSubmit={handleSubmit(handleNext)}>
-              {getStepContent(activeStep)}
+              {stepContent}
               <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                 {activeStep !== 0 && (
                   <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
@@ -104,7 +126,7 @@ export default function Checkout() {
                   </Button>
                 )}
                 <Button
-                  disabled={!formState.isValid}
+                  disabled={!isValid}
                   variant="contained"
                   type="submit"
                   sx={{ mt: 3, ml: 1 }}
