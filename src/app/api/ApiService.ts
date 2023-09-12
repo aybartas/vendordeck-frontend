@@ -1,8 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { globalNavigate } from "../global/GlobalHistory";
-import { RegisterRequest } from "../models/requests/registerRequest";
-import { store } from "../store/configureStore";
 
 const sleep = () => new Promise((resolve) => setTimeout(resolve, 100));
 
