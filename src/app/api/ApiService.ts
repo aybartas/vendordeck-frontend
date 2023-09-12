@@ -93,7 +93,7 @@ const User = {
 const Order = {
   createOrder: (createOrderRequest: {}) =>
     requests.post("orders", createOrderRequest),
-  getOrderById: (id: number) => requests.get(`orders/${id}`),
+  getOrderById: (id: string) => requests.get(`orders/${id}`),
   orderList: (params?: URLSearchParams) => requests.get("orders", params),
 };
 
