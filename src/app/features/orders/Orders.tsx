@@ -20,11 +20,12 @@ import {
   orderStatus,
 } from "../../constants/orderConstants";
 import displayCalculatedCurrency from "../../utils/caculations";
+import { useNavigate } from "react-router";
 
 export default function Orders() {
   const [orders, setOrders] = useState<Order[] | []>([]);
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
   useEffect(() => {
     apiAgent.Order.orderList()
       .then((res) => setOrders(res?.orders))
@@ -51,6 +52,10 @@ export default function Orders() {
         }
       ></Chip>
     );
+  };
+
+  const handleNavigateToOrderDetail = (id: number) => {
+    navigate(`/orders/${id}`);
   };
 
   if (loading) return <Loading message="Loading orders"></Loading>;
@@ -82,6 +87,7 @@ export default function Orders() {
               <TableCell>{getOrderStatusChip(order.orderStatus)}</TableCell>
               <TableCell>
                 <Button
+                  onClick={() => handleNavigateToOrderDetail(order.id)}
                   startIcon={<VisibilityIcon />}
                   color="secondary"
                 ></Button>

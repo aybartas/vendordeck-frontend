@@ -3,6 +3,7 @@ import { Address } from "./address";
 import { OrderItem } from "./orderItem";
 
 export interface Order {
+  id: number;
   buyerId: string;
   orderDate: string;
   orderNumber: number;

@@ -20,8 +20,8 @@ import Register from "../features/account/Register";
 import { getCurrentUser } from "../features/account/AccountSlice";
 import RequireAuth from "../routing/RequireAuth";
 import CheckOutPage from "../features/checkout/CheckoutPage";
-import RequireAnonymous from "../routing/RequireAnonymous";
 import Orders from "../features/orders/Orders";
+import OrderDetail from "../features/orders/OrderDetail";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -66,16 +66,15 @@ function App() {
             <Route element={<RequireAuth />}>
               <Route path="checkout" element={<CheckOutPage />} />
               <Route path="orders" element={<Orders />} />
-            </Route>
-            <Route element={<RequireAnonymous />}>
-              <Route path="login" element={<Login />} />
-              <Route path="register" element={<Register />} />
+              <Route path="orders/:id" element={<OrderDetail />} />
             </Route>
             <Route path="catalog" element={<Catalog />} />
             <Route path="catalog/:id" element={<ProductDetail />} />
             <Route path="about" element={<AboutPage />} />
             <Route path="contact" element={<ContactPage />} />
             <Route path="basket" element={<BasketPage />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
             <Route path="server-error" element={<ServerError />} />
             <Route path="not-found" element={<NotFound />} />
             <Route path="*" element={<Navigate replace to="/not-found" />} />
