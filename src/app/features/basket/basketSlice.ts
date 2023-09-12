@@ -1,7 +1,7 @@
-import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Basket } from "../../models/entities/basket";
 import { apiAgent } from "../../api/ApiService";
-import { stat } from "fs";
+import { toast } from "react-toastify";
 
 interface BasketState {
   basket: Basket | null;
@@ -22,6 +22,7 @@ export const addBasketItemAsync = createAsyncThunk<
     try {
       await apiAgent.Basket.addItem(productId, quantity);
       await thunkAPI.dispatch(fetchBasketAsync());
+      toast.success("Product added to basket");
     } catch (error: any) {
       thunkAPI.rejectWithValue({ error: error.data });
     }

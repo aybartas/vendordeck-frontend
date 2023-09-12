@@ -1,5 +1,4 @@
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
@@ -17,8 +16,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { validationSchema } from "./CheckOutValidation";
 import { apiAgent } from "../../api/ApiService";
 import { toast } from "react-toastify";
-import { useAppDispatch } from "../../store/configureStore";
 import { emptyBasket } from "../basket/basketSlice";
+import { useAppSelector } from "../../store/configureStore";
 
 function Copyright() {
   return (
@@ -36,18 +35,21 @@ function Copyright() {
 const steps = ["Shipping address", "Payment details", "Review your order"];
 
 export default function CheckOutPage() {
+  const { user } = useAppSelector((state) => state.account);
+  const savedAddress = user?.lastAddress;
   const formOptions = useForm({
     mode: "onTouched",
     resolver: yupResolver(validationSchema),
+    defaultValues: {
+      shippingAddress: savedAddress,
+    },
   });
 
-  const { handleSubmit, formState, getValues } = formOptions;
-  const { isDirty, isValid } = formState;
-
+  const { handleSubmit, formState, reset } = formOptions;
+  const { isValid } = formState;
   const [activeStep, setActiveStep] = React.useState(0);
   const [orderNumber, setOrderNumber] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
-  const dispatch = useAppDispatch();
 
   const handleNext = (data: FieldValues) => {
     if (activeStep === 2) {

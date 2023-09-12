@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import ProductList from "./ProductList";
-import Loading from "../../layout/Loading";
 import { useAppDispatch, useAppSelector } from "../../store/configureStore";
 import SearchIcon from "@mui/icons-material/Search";
 import {
@@ -31,13 +30,11 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import displayCalculatedCurrency from "../../utils/caculations";
 import { Sort } from "../../models/query/sort";
-import ProductCardSkeleton from "./ProductSkeleton";
 
 export default function Catalog() {
   const products = useAppSelector(productSelectors.selectAll);
   const {
     productsLoaded,
-    status,
     filtersLoaded,
     totalProductCount,
     brands,

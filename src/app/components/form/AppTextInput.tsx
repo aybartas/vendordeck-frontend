@@ -12,7 +12,6 @@ export default function AppTextInput(props: Props) {
     <Controller
       name={props.name}
       control={props.control}
-      defaultValue=""
       render={({ field, fieldState: { error } }) => (
         <TextField
           fullWidth
