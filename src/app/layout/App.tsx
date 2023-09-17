@@ -22,6 +22,7 @@ import RequireAuth from "../routing/RequireAuth";
 import CheckOutPage from "../features/checkout/CheckoutPage";
 import Orders from "../features/orders/Orders";
 import OrderDetail from "../features/orders/OrderDetail";
+import CheckoutWrapper from "../features/checkout/CheckOutWrapper";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -64,7 +65,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />}>
             <Route element={<RequireAuth />}>
-              <Route path="checkout" element={<CheckOutPage />} />
+              <Route path="checkout" element={<CheckoutWrapper />} />
               <Route path="orders" element={<Orders />} />
               <Route path="orders/:id" element={<OrderDetail />} />
             </Route>

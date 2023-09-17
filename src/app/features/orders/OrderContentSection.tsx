@@ -1,4 +1,4 @@
-import { Card, CardContent, Divider, Grid, Typography } from "@mui/material";
+import { Card, CardContent, Grid, Typography } from "@mui/material";
 import { Order } from "../../models/entities/order";
 import OrderedProductCard from "./OrderedProductCard";
 
