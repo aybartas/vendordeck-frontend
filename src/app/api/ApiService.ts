@@ -97,6 +97,10 @@ const Order = {
   orderList: (params?: URLSearchParams) => requests.get("orders", params),
 };
 
+const Payments = {
+  createPaymentIntent: () => requests.post("payments", {}),
+};
+
 const TestErrors = {
   getServerError: () =>
     requests
@@ -114,4 +118,5 @@ export const apiAgent = {
   Basket,
   User,
   Order,
+  Payments,
 };

@@ -4,9 +4,10 @@ import { Controller, UseControllerProps } from "react-hook-form";
 interface Props extends UseControllerProps {
   label: string;
   helperText?: string;
+  rest?: Record<string, any>;
 }
 export default function AppTextInput(props: Props) {
-  const { label, helperText } = props;
+  const { label, helperText, rest } = props;
 
   return (
     <Controller
@@ -20,6 +21,8 @@ export default function AppTextInput(props: Props) {
           variant="outlined"
           helperText={error ? error.message : helperText}
           {...field}
+          {...rest}
+          onChange={(e) =>  e.target.value}
         />
       )}
     />
