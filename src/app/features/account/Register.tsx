@@ -7,18 +7,12 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
-  Alert,
-  AlertTitle,
-  List,
-  ListItem,
-  ListItemText,
   Paper,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { LoadingButton } from "@mui/lab";
 import { apiAgent } from "../../api/ApiService";
-import { useState } from "react";
 import { toast } from "react-toastify";
 
 const theme = createTheme();
@@ -101,10 +95,6 @@ export default function Register() {
               autoComplete="email"
               {...register("email", {
                 required: "Email is required",
-                pattern: {
-                  value: /^[^s@]+@[^s@]+.[^s@]+$/,
-                  message: "Not a valid email address",
-                },
               })}
               error={!!errors.email}
               helperText={errors?.email?.message as string}

@@ -12,6 +12,7 @@ import { NavLink, Link } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useAppSelector } from "../store/configureStore";
 import SignedInMenu from "./SignedInMenu";
+import { CleaningServices } from "@mui/icons-material";
 
 interface Props {
   darkMode: boolean;
@@ -39,11 +40,12 @@ const navStyles = {
   },
 };
 
-export default function Header({ darkMode, handleThemeChange }: Props) {
+export default function Header({ handleThemeChange }: Props) {
   const { basket } = useAppSelector((state) => state.basket);
-  const { user } = useAppSelector((state) => state.account);
+  const { user} = useAppSelector((state) => state.account);
 
   const itemCount = basket?.basketItems?.length ?? 0;
+
 
   return (
     <AppBar position="sticky" sx={{ mb: 4 }}>

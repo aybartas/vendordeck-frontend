@@ -19,7 +19,6 @@ import Login from "../features/account/Login";
 import Register from "../features/account/Register";
 import { getCurrentUser } from "../features/account/AccountSlice";
 import RequireAuth from "../routing/RequireAuth";
-import CheckOutPage from "../features/checkout/CheckoutPage";
 import Orders from "../features/orders/Orders";
 import OrderDetail from "../features/orders/OrderDetail";
 import CheckoutWrapper from "../features/checkout/CheckOutWrapper";
@@ -28,6 +27,11 @@ function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
+  const {user,token}= useAppSelector(state => state.account);
+
+  console.log("app user",user);
+  console.log("app token",token);
+
   const paletteSelection = darkMode ? "dark" : "light";
   const theme = createTheme({
     palette: {
@@ -49,7 +53,8 @@ function App() {
 
   useEffect(() => {
     initApp().then(() => setLoading(false));
-  }, [initApp]);
+  }, [initApp,token]);
+
 
   if (loading) return <CircularProgress />;
 

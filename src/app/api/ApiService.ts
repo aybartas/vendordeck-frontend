@@ -34,20 +34,20 @@ axios.interceptors.response.use(
           }
           throw modelStateErrors.flat();
         }
-        toast.error(data.title);
+        // toast.error(data.title);
         break;
       case 401:
-        toast.error(data.title || "Unauthorized");
+        // toast.error(data.title);
         break;
       case 404:
-        toast.error(data.title || "Not Found");
+        // toast.error(data.title);
         break;
       case 302:
-        toast.error("Unauthorized");
+        // toast.error("Unauthorized");
         break;
       case 500:
         globalNavigate("/server-error", { state: { error: data } });
-        toast.error(data.title);
+        // toast.error(data.title);
         break;
       default:
         break;

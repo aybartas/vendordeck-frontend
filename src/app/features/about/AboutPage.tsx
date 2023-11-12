@@ -7,10 +7,8 @@ import { Button, ButtonGroup, Container, Typography } from "@mui/material";
 import { useState } from "react";
 import { apiAgent } from "../../api/ApiService";
 import { AxiosResponse } from "axios";
-import React from "react";
 
 export default function AboutPage() {
-  console.log("about");
 
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
